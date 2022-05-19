@@ -16,6 +16,9 @@ public class Task {
     private boolean isRepeated;
 
 
+    public Task() {
+        super();
+    }
     /**
      * Constructor describing the Task with title and time of action.
      * @param title title of the task
@@ -90,7 +93,7 @@ public class Task {
     public int getStartTime() {
         return isRepeated ? time_start : time;
     }
-    //public void setStartTime(int time_start) { this.time_start = time_start; }
+    public void setStartTime(int time_start) { this.time_start = time_start; }
 
     /**
      * Method returns execution time if the task is not repetitive
@@ -99,7 +102,7 @@ public class Task {
     public int getEndTime() {
         return isRepeated ? time_end : time;
     }
-    //public void setTime_end(int time_end) { this.time_end = time_end; }
+    public void setTime_end(int time_end) { this.time_end = time_end; }
 
     /**
      * Method returns repetition interval if the task is repetitive
@@ -118,6 +121,15 @@ public class Task {
     public boolean isRepeated() { return isRepeated; }
     public void setRepeated(boolean isRepeated) { this.isRepeated = isRepeated; }
 
+    /**
+     * Method returns the next task execution time.
+     * If the task is not repetitive, returns -1.
+     * If the next task execution time is greater than current, returns this next_time
+     * else returns -1.
+     * If next time greater than task completion time, returns -1
+     * else returns next_time.
+     * @param current current time
+     */
     public int nextTimeAfter(int current) {
         if(!isActive) return -1;
 
@@ -134,5 +146,18 @@ public class Task {
             next_time += time_interval_repeat;
 
         return next_time < time_end ? next_time : -1;
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "title='" + title + '\'' +
+                ", time=" + time +
+                ", time_start=" + time_start +
+                ", time_end=" + time_end +
+                ", time_interval_repeat=" + time_interval_repeat +
+                ", isActive=" + isActive +
+                ", isRepeated=" + isRepeated +
+                '}';
     }
 }
