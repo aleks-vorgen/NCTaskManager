@@ -25,10 +25,14 @@ public class Task {
      * @param time execution time
      */
     public Task(String title, int time) {
+        if (time < 0)
+            throw new IllegalArgumentException("Task cannot take negative time");
+
         this.title = title;
         this.time = time;
         isActive = false;
         isRepeated = false;
+
     }
 
     /**
@@ -40,6 +44,9 @@ public class Task {
      * @param time_interval_repeat task repetition interval
      */
     public Task(String title, int time_start, int time_end, int time_interval_repeat) {
+        if (time_start < 0 || time_end < 0 || time_interval_repeat <= 0)
+            throw new IllegalArgumentException("Task cannot take negative time. Interval must be greater than 0");
+
         this.title = title;
         this.time_start = time_start;
         this.time_end = time_end;
@@ -69,6 +76,9 @@ public class Task {
      * @param time execution time
      */
     public void setTime(int time) {
+        if (time < 0)
+            throw new IllegalArgumentException("Task cannot take negative time.");
+
         this.time = time;
         if (isRepeated) {
             isRepeated = false;
@@ -80,6 +90,9 @@ public class Task {
      * for the not repetitive task.
      */
     public void setTime(int time_start, int time_end, int time_interval_repeat) {
+        if (time_start < 0 || time_end < 0 || time_interval_repeat <= 0)
+            throw new IllegalArgumentException("Task cannot take negative time. Interval must be greater than 0");
+
         this.time_start = time_start;
         this.time_end = time_end;
         this.time_interval_repeat = time_interval_repeat;
