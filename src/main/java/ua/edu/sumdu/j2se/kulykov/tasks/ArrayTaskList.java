@@ -21,6 +21,9 @@ public class ArrayTaskList {
     }
 
     public Task getTask(int index) {
+        if (index > size)
+            throw new IndexOutOfBoundsException("Index is outside the list size");
+
         return taskList[index];
     }
 
@@ -34,6 +37,9 @@ public class ArrayTaskList {
      * the size of array is doubled.
      */
     public void add(Task task) {
+        if (task == null)
+            throw new NullPointerException("You can`t add a null element to the list");
+
         taskAmount++;
 
         if (taskAmount > size) {
@@ -58,7 +64,7 @@ public class ArrayTaskList {
      */
     public boolean remove(Task task) {
         for (int i = 0; i < size; i++) {
-            if (taskList[i] == task) {
+            if (taskList[i].equals(task)) {
                 taskList[i] = null;
                 sortTaskList();
                 taskAmount--;
