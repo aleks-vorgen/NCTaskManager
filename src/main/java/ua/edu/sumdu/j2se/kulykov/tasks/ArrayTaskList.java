@@ -1,8 +1,9 @@
 package ua.edu.sumdu.j2se.kulykov.tasks;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
-public class ArrayTaskList {
+public class ArrayTaskList extends AbstractTaskList {
 
     private Task[] taskList;
     private int size;
@@ -20,6 +21,7 @@ public class ArrayTaskList {
         taskList = new Task[size];
     }
 
+    @Override
     public Task getTask(int index) {
         if (index > size)
             throw new IndexOutOfBoundsException("Index is outside the list size");
@@ -27,6 +29,7 @@ public class ArrayTaskList {
         return taskList[index];
     }
 
+    @Override
     public int size() {
         return taskAmount;
     }
@@ -36,6 +39,7 @@ public class ArrayTaskList {
      * If the number of tasks is greater than the size of array
      * the size of array is doubled.
      */
+    @Override
     public void add(Task task) {
         if (task == null)
             throw new NullPointerException("You can`t add a null element to the list");
@@ -62,6 +66,7 @@ public class ArrayTaskList {
      * Method removes the task from the task list.
      * The array is sorted.
      */
+    @Override
     public boolean remove(Task task) {
         for (int i = 0; i < size; i++) {
             if (taskList[i].equals(task)) {
@@ -87,17 +92,19 @@ public class ArrayTaskList {
         }
     }
 
-    /**
-     * Method returns the subset wit tasks
-     * which will be executed in a given period of time.
-     */
-    public ArrayTaskList incoming(int from, int to) {
-        ArrayTaskList res = new ArrayTaskList();
-        for (int i = 0; i < taskAmount; i++) {
-            if (taskList[i].isActive() && taskList[i].nextTimeAfter(from) < to && taskList[i].nextTimeAfter(from) > from) {
-                res.add(taskList[i]);
+    @Override
+    public Iterator<Task> iterator() {
+        return new Iterator<Task>() {
+            private int index = 0;
+            @Override
+            public boolean hasNext() {
+                return index < taskAmount && taskList[index] != null;
             }
-        }
-        return res;
+
+            @Override
+            public Task next() {
+                return taskList[index++];
+            }
+        };
     }
 }

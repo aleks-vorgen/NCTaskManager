@@ -1,7 +1,9 @@
 package ua.edu.sumdu.j2se.kulykov.tasks;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-public class LinkedTaskList {
+public class LinkedTaskList extends AbstractTaskList {
     private Node first;
     private int taskAmount;
 
@@ -10,6 +12,7 @@ public class LinkedTaskList {
      * @param index index of the required task
      * @return Task or null if the task was not found
      */
+    @Override
     public Task getTask(int index) {
         if (index > size())
             throw new IndexOutOfBoundsException("Index is outside the list size");
@@ -27,6 +30,7 @@ public class LinkedTaskList {
         return null;
     }
 
+    @Override
     public int size() {
         return taskAmount;
     }
@@ -35,6 +39,7 @@ public class LinkedTaskList {
      * Method adds the task to the end of the linked task list.
      * @param task task which should be added.
      */
+    @Override
     public void add(Task task) {
         if (task == null)
             throw new NullPointerException("You can`t add a null element to the list");
@@ -55,6 +60,7 @@ public class LinkedTaskList {
      * @param task task which should be removed.
      * @return true if the task was removed or false if not.
      */
+    @Override
     public boolean remove(Task task) {
         if (task == null)
             throw new NullPointerException("Your value was null");
@@ -78,21 +84,33 @@ public class LinkedTaskList {
         return false;
     }
 
-    /**
-     * Method returns the subset wit tasks.
-     * which will be executed in a given period of time.
-     * @param from searching time start.
-     * @param to searching time end.
-     * @return task subset or null if nothing was found.
-     */
-    public LinkedTaskList incoming(int from, int to) {
-        LinkedTaskList res = new LinkedTaskList();
-        for (int i = 0; i < taskAmount; i++) {
-            if (getTask(i).isActive() && getTask(i).nextTimeAfter(from) < to && getTask(i).nextTimeAfter(from) > from) {
-                res.add(getTask(i));
+    @Override
+    public Iterator<Task> iterator() {
+        return new Iterator<Task>() {
+            private Node current = first;
+            private int nextIndex;
+
+            @Override
+            public boolean hasNext() {
+                return nextIndex < taskAmount;
             }
-        }
-        return res;
+
+            @Override
+            public Task next() {
+                if (!hasNext())
+                    throw new NoSuchElementException();
+
+                Node lastReturned = current;
+                current = current.linkToNext;
+                nextIndex++;
+                return lastReturned.task;
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("You can`t remove items throw iterator");
+            }
+        };
     }
 
     private static class Node {
