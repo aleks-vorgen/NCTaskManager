@@ -2,10 +2,17 @@ package ua.edu.sumdu.j2se.kulykov.tasks;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
-public class LinkedTaskList extends AbstractTaskList {
+public class LinkedTaskList extends AbstractTaskList implements Cloneable {
     private Node first;
     private int taskAmount;
+
+
+    @Override
+    protected ListTypes.types getType() {
+        return ListTypes.types.LINKED;
+    }
 
     /**
      * Method return the required task
@@ -64,7 +71,7 @@ public class LinkedTaskList extends AbstractTaskList {
     public boolean remove(Task task) {
         if (task == null)
             throw new NullPointerException("Your value was null");
-        
+
         if (first == null) return false;
         else if (first.task.equals(task)) {
             first = first.linkToNext;
@@ -88,6 +95,7 @@ public class LinkedTaskList extends AbstractTaskList {
     public Iterator<Task> iterator() {
         return new Iterator<Task>() {
             private Node current = first;
+            private Node lastReturned;
             private int nextIndex;
 
             @Override
@@ -100,7 +108,7 @@ public class LinkedTaskList extends AbstractTaskList {
                 if (!hasNext())
                     throw new NoSuchElementException();
 
-                Node lastReturned = current;
+                lastReturned = current;
                 current = current.linkToNext;
                 nextIndex++;
                 return lastReturned.task;
@@ -108,9 +116,74 @@ public class LinkedTaskList extends AbstractTaskList {
 
             @Override
             public void remove() {
-                throw new UnsupportedOperationException("You can`t remove items throw iterator");
+                if (lastReturned == null)
+                    throw new IllegalStateException();
+
+                Node lastNext = lastReturned.linkToNext;
+                LinkedTaskList.this.remove(lastReturned.task);
+                if (current.equals(lastReturned))
+                    current = lastNext;
+                else
+                    nextIndex--;
+                lastReturned = null;
             }
         };
+    }
+
+    @Override
+    public String toString() {
+        return "LinkedTaskList{" +
+                "first=" + first +
+                ", taskAmount=" + taskAmount +
+                '}';
+    }
+
+    @Override
+    public LinkedTaskList clone() throws CloneNotSupportedException {
+        LinkedTaskList clone = (LinkedTaskList) super.clone();
+
+        clone.first = null;
+        clone.taskAmount = 0;
+
+        for (Node x = first; x != null; x = x.linkToNext)
+            clone.add(x.task);
+
+        return clone;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Iterator<Task> it1 = iterator();
+        Iterator<Task> it2 = ((LinkedTaskList) o).iterator();
+
+        while (it1.hasNext() && it2.hasNext()) {
+            Task t1 = it1.next();
+            Task t2 = it2.next();
+
+            if (!(Objects.equals(t1, t2)))
+                return false;
+        }
+
+        return !(it1.hasNext() || it2.hasNext());
+    }
+
+    @Override
+    public int hashCode() {
+        int nodeHash = Objects.hash(taskAmount);
+
+        Node currentTask = first;
+        while (currentTask.linkToNext != null) {
+
+            currentTask.linkToNext = currentTask.linkToNext.linkToNext;
+            nodeHash += Objects.hash(currentTask.task);
+
+            currentTask = currentTask.linkToNext;
+        }
+
+        return nodeHash;
     }
 
     private static class Node {

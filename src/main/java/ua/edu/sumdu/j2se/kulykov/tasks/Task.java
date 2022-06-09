@@ -1,11 +1,13 @@
 package ua.edu.sumdu.j2se.kulykov.tasks;
 
+import java.util.Objects;
+
 /**
  * Class declared some Tasks.
  * @author Kulykov
  * @version 1.0
  */
-public class Task {
+public class Task implements Cloneable{
 
     private String title;
     private int time;
@@ -172,5 +174,29 @@ public class Task {
                 ", isActive=" + isActive +
                 ", isRepeated=" + isRepeated +
                 '}';
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return time == task.time
+                && time_start == task.time_start
+                && time_end == task.time_end
+                && time_interval_repeat == task.time_interval_repeat
+                && isActive == task.isActive
+                && isRepeated == task.isRepeated
+                && Objects.equals(title, task.title);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, time, time_start, time_end, time_interval_repeat, isActive, isRepeated);
     }
 }
