@@ -3,6 +3,7 @@ package ua.edu.sumdu.j2se.kulykov.tasks;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public class LinkedTaskList extends AbstractTaskList implements Cloneable {
     private Node first;
@@ -89,6 +90,20 @@ public class LinkedTaskList extends AbstractTaskList implements Cloneable {
                 }
             }
         return false;
+    }
+
+    @Override
+    public Stream<Task> getStream() {
+        return Stream.of(thisToArray());
+    }
+
+    public Task[] thisToArray() {
+        Task[] res = new Task[taskAmount];
+
+        for (int i = 0; i < taskAmount; i++)
+            res[i] = getTask(i);
+
+        return res;
     }
 
     @Override

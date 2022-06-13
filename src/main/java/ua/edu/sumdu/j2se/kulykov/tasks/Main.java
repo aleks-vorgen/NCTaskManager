@@ -3,6 +3,7 @@ package ua.edu.sumdu.j2se.kulykov.tasks;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.stream.Stream;
 
 public class Main {
 
@@ -13,12 +14,6 @@ public class Main {
 		ltl.add(new Task("t2", 1));
 		ltl.add(new Task("t3", 2));
 		ltl.getTask(0).setActive(true);
-
-		for (Task task : ltl) {
-			System.out.println(task);
-		}
-
-		System.out.println();
 
 		ArrayTaskList atl = new ArrayTaskList();
 
