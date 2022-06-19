@@ -1,25 +1,38 @@
 package ua.edu.sumdu.j2se.kulykov.tasks;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.stream.Stream;
+import java.time.LocalDateTime;
 
 public class Main {
 
+	public static final LocalDateTime NOW = LocalDateTime.now();
+	public static final LocalDateTime TODAY = NOW.withHour(0).withMinute(0).withSecond(0);
+	public static final LocalDateTime TOMORROW = TODAY.plusDays(1);
+	public static final LocalDateTime ALMOST_TOMORROW = TOMORROW.minusSeconds(1);
+	public static final LocalDateTime FROM_NOW_10 = NOW.plusSeconds(10);
+
 	public static void main(String[] args) {
-		LinkedTaskList ltl = new LinkedTaskList();
+		Task t1 = new Task("A", NOW);
+		Task t2 = new Task("B", FROM_NOW_10);
 
-		ltl.add(new Task("t1", 1, 3, 1));
-		ltl.add(new Task("t2", 1));
-		ltl.add(new Task("t3", 2));
-		ltl.getTask(0).setActive(true);
+		System.out.println(t1.hashCode());
+		System.out.println(t2.hashCode());
 
-		ArrayTaskList atl = new ArrayTaskList();
+		System.out.println(t1);
+		System.out.println(t2);
 
-		atl.add(new Task("t1", 1, 3, 1));
-		atl.add(new Task("t2", 1));
-		atl.add(new Task("t3", 3));
-		atl.getTask(0).setActive(true);
+		t1.setTitle("some task");
+		t2.setTitle("some task");
+
+		t1.setTime(NOW);
+		t2.setTime(NOW);
+
+		t1.setActive(true);
+		t2.setActive(true);
+
+		System.out.println(t1.hashCode());
+		System.out.println(t2.hashCode());
+
+		System.out.println(t1);
+		System.out.println(t2);
 	}
 }
