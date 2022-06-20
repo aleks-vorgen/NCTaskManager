@@ -1,5 +1,6 @@
 package ua.edu.sumdu.j2se.kulykov.tasks;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -7,12 +8,12 @@ import java.util.Objects;
  * @author Kulykov
  * @version 1.0
  */
-public class Task implements Cloneable{
+public class Task implements Cloneable {
 
     private String title;
-    private int time;
-    private int time_start;
-    private int time_end;
+    private LocalDateTime time;
+    private LocalDateTime time_start;
+    private LocalDateTime time_end;
     private int time_interval_repeat;
     private boolean isActive;
     private boolean isRepeated;
@@ -26,15 +27,17 @@ public class Task implements Cloneable{
      * @param title title of the task
      * @param time execution time
      */
-    public Task(String title, int time) {
-        if (time < 0)
-            throw new IllegalArgumentException("Task cannot take negative time");
+    public Task(String title, LocalDateTime time) {
+        if (time == null)
+            throw new IllegalArgumentException();
 
         this.title = title;
         this.time = time;
+        time_start = time;
+        time_end = time;
+        time_interval_repeat = 0;
         isActive = false;
         isRepeated = false;
-
     }
 
     /**
@@ -45,11 +48,12 @@ public class Task implements Cloneable{
      * @param time_end time when action ends
      * @param time_interval_repeat task repetition interval
      */
-    public Task(String title, int time_start, int time_end, int time_interval_repeat) {
-        if (time_start < 0 || time_end < 0 || time_interval_repeat <= 0)
-            throw new IllegalArgumentException("Task cannot take negative time. Interval must be greater than 0");
+    public Task(String title, LocalDateTime time_start, LocalDateTime time_end, int time_interval_repeat) {
+        if (time_start == null || time_end == null || time_interval_repeat <= 0)
+            throw new IllegalArgumentException();
 
         this.title = title;
+        time = time_start;
         this.time_start = time_start;
         this.time_end = time_end;
         this.time_interval_repeat = time_interval_repeat;
@@ -68,20 +72,21 @@ public class Task implements Cloneable{
      * Method returns repetition time if the task is repeated
      * or returns execution time if is.
      */
-    public int getTime() {
-        if (isRepeated) return time_start;
-        else return time;
+    public LocalDateTime getTime() {
+        return isRepeated ? time_start : time;
     }
 
     /**
      * Method sets the time for the task and make it not repetitive.
      * @param time execution time
      */
-    public void setTime(int time) {
-        if (time < 0)
-            throw new IllegalArgumentException("Task cannot take negative time.");
+    public void setTime(LocalDateTime time) {
+        if (time == null)
+            throw new IllegalArgumentException();
 
         this.time = time;
+        this.time_start = time;
+        this.time_end = time;
         if (isRepeated) {
             isRepeated = false;
         }
@@ -91,9 +96,10 @@ public class Task implements Cloneable{
      * Method sets the time when action starts and time when action ends
      * for the not repetitive task.
      */
-    public void setTime(int time_start, int time_end, int time_interval_repeat) {
-        if (time_start < 0 || time_end < 0 || time_interval_repeat <= 0)
-            throw new IllegalArgumentException("Task cannot take negative time. Interval must be greater than 0");
+    public void setTime(LocalDateTime time_start, LocalDateTime time_end, int time_interval_repeat) {
+        if (time_start == null || time_end == null || time_interval_repeat <= 0
+            || time_start.isAfter(time_end) || time_end.isBefore(time_start))
+            throw new IllegalArgumentException();
 
         this.time_start = time_start;
         this.time_end = time_end;
@@ -105,19 +111,28 @@ public class Task implements Cloneable{
      * Method returns execution time if the task is not repetitive
      * or returns time when action starts if the task is repetitive.
      */
-    public int getStartTime() {
+    public LocalDateTime getStartTime() {
         return isRepeated ? time_start : time;
     }
-    public void setStartTime(int time_start) { this.time_start = time_start; }
+    public void setStartTime(LocalDateTime time_start) {
+        if (time_start == null || time_start.isAfter(time_end))
+            throw new IllegalArgumentException();
+
+        this.time_start = time_start;
+    }
 
     /**
      * Method returns execution time if the task is not repetitive
      * or returns time when action ends if the task is repetitive.
      */
-    public int getEndTime() {
+    public LocalDateTime getEndTime() {
         return isRepeated ? time_end : time;
     }
-    public void setTime_end(int time_end) { this.time_end = time_end; }
+    public void setTime_end(LocalDateTime time_end) {
+        if (time_end == null || time_end.isBefore(time_start))
+            throw new IllegalArgumentException();
+
+        this.time_end = time_end; }
 
     /**
      * Method returns repetition interval if the task is repetitive
@@ -127,6 +142,9 @@ public class Task implements Cloneable{
         return isRepeated ? time_interval_repeat : 0;
     }
     public void setTime_interval_repeat(int time_interval_repeat) {
+        if (time_interval_repeat <= 0)
+            throw new IllegalArgumentException();
+
         this.time_interval_repeat = time_interval_repeat;
     }
 
@@ -145,22 +163,24 @@ public class Task implements Cloneable{
      * else returns next_time.
      * @param current current time
      */
-    public int nextTimeAfter(int current) {
-        if(!isActive) return -1;
+    public LocalDateTime nextTimeAfter(LocalDateTime current) {
+        if(!isActive) return null;
 
-        int next_time;
+        LocalDateTime next_time;
         if (isRepeated) {
             next_time = time_start;
         }
         else {
             next_time = time;
-            return next_time > current ? next_time : -1;
+            return next_time.isAfter(current) ? next_time : null;
         }
 
-        while (next_time <= current)
-            next_time += time_interval_repeat;
+        while (next_time.isBefore(current) || next_time.equals(current))
+            next_time = next_time.plusSeconds(time_interval_repeat);
 
-        return next_time < time_end ? next_time : -1;
+
+
+        return next_time.isBefore(time_end) || next_time.equals(time_end) ? next_time : null;
     }
 
     @Override
@@ -186,9 +206,9 @@ public class Task implements Cloneable{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return time == task.time
-                && time_start == task.time_start
-                && time_end == task.time_end
+        return time.equals(task.time)
+                && time_start.equals(task.time_start)
+                && time_end.equals(task.time_end)
                 && time_interval_repeat == task.time_interval_repeat
                 && isActive == task.isActive
                 && isRepeated == task.isRepeated
@@ -197,6 +217,7 @@ public class Task implements Cloneable{
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, time, time_start, time_end, time_interval_repeat, isActive, isRepeated);
+        return time.hashCode() + time_start.hashCode() + time_end.hashCode()
+                + title.hashCode() + Objects.hash(isActive, isRepeated, time_interval_repeat);
     }
 }
