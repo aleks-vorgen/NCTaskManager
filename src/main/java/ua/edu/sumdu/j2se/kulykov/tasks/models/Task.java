@@ -1,4 +1,4 @@
-package ua.edu.sumdu.j2se.kulykov.tasks;
+package ua.edu.sumdu.j2se.kulykov.tasks.models;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
