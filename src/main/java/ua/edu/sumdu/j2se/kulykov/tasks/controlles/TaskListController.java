@@ -5,22 +5,12 @@ import ua.edu.sumdu.j2se.kulykov.tasks.models.Task;
 import ua.edu.sumdu.j2se.kulykov.tasks.models.Tasks;
 
 import java.time.LocalDateTime;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 
 public class TaskListController extends Controller {
-
-    public ArrayTaskList createTaskList() {
-        return new ArrayTaskList();
-    }
-
-    public ArrayTaskList createTaskList(Task[] tasks) {
-        ArrayTaskList taskList = new ArrayTaskList(tasks.length);
-        for (Task task : tasks) {
-            taskList.add(task);
-        }
-        return taskList;
-    }
 
     public String getTaskList(ArrayTaskList tasks) {
         if (tasks == null || tasks.size() == 0)
@@ -50,8 +40,17 @@ public class TaskListController extends Controller {
             if (max.compareTo(task.getStartTime()) < 0)
                 max = task.getStartTime();
         }
-        //TODO не возвращаются таски
-        SortedMap<LocalDateTime, Set<Task>> map = Tasks.calendar(tasks, min, max);
-        return map.toString();
+        SortedMap<LocalDateTime, Set<Task>> calendar = Tasks.calendar(tasks, min, max);
+
+        StringBuilder str = new StringBuilder();
+        int counter = 0;
+        for (LocalDateTime date : calendar.keySet()) {
+            str.append("Date: " + date.getDayOfMonth() + '.'
+                            + date.getMonthValue() + '.'
+                            + date.getYear() + '\n')
+                    .append("  " + (counter + 1) + calendar.get(date).toArray()[counter] + '\n');
+            counter++;
+        }
+        return str.toString();
     }
 }

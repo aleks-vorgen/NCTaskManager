@@ -26,6 +26,7 @@ public class Tasks {
                     .filter(task -> task.nextTimeAfter(start).isAfter(start))
                     .filter(task -> task.nextTimeAfter(start).isBefore(end)
                             || task.nextTimeAfter(start).equals(end)).forEach(res::add);
+
             return res;
         }
     }
@@ -47,6 +48,7 @@ public class Tasks {
                 current = task.nextTimeAfter(current);
             }
         }
+
         return sortedMap;
     }
 }
