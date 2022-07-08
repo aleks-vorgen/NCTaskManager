@@ -36,7 +36,7 @@ public class Task implements Cloneable {
         time_start = time;
         time_end = time;
         time_interval_repeat = 0;
-        isActive = false;
+        isActive = true;
         isRepeated = false;
     }
 
@@ -57,7 +57,7 @@ public class Task implements Cloneable {
         this.time_start = time_start;
         this.time_end = time_end;
         this.time_interval_repeat = time_interval_repeat;
-        isActive = false;
+        isActive = true;
         isRepeated = true;
     }
 

@@ -1,5 +1,9 @@
 package ua.edu.sumdu.j2se.kulykov.tasks.views;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.time.LocalDateTime;
 import java.util.Scanner;
 
@@ -21,7 +25,7 @@ public class Main {
 			System.out.println("2. Show calendar of tasks");
 			System.out.println("3. Show incoming tasks");
 			System.out.println("4. Exit");
-			System.out.println("Type your choice: ");
+			System.out.print("Type your choice: ");
 			String choice = sc.nextLine();
 			switch (choice) {
 				case "1":
@@ -32,10 +36,13 @@ public class Main {
 					stv.getCalendar();
 					break;
 				case "3":
-					//TODO stv.incoming()
+					stv.getIncoming();
 					break;
 				case "4":
 					System.exit(0);
+					break;
+				default:
+					System.out.println("This option does not exist\n");
 			}
 		}
 	}
