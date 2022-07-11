@@ -1,17 +1,21 @@
-package ua.edu.sumdu.j2se.kulykov.tasks.controlles;
+package ua.edu.sumdu.j2se.kulykov.tasks.controllers;
 
 import ua.edu.sumdu.j2se.kulykov.tasks.models.ArrayTaskList;
 import ua.edu.sumdu.j2se.kulykov.tasks.models.Task;
 import ua.edu.sumdu.j2se.kulykov.tasks.models.Tasks;
+import ua.edu.sumdu.j2se.kulykov.tasks.views.Main;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Set;
 import java.util.SortedMap;
 
 public class TaskListController extends Controller {
+    private final ArrayTaskList tasks = Main.taskList;
 
-    public String getTaskList(ArrayTaskList tasks) {
-        if (tasks == null || tasks.size() == 0)
+    public String getTaskList() {
+        ArrayTaskList tasks = Main.taskList;
+        if (tasks.size() == 0)
             return "\nNothing to show\n";
 
         StringBuilder str = new StringBuilder();
@@ -32,7 +36,7 @@ public class TaskListController extends Controller {
         return str.toString();
     }
 
-    public String getCalendar(ArrayTaskList tasks) {
+    public String getCalendar() {
         if (tasks == null || tasks.size() == 0)
             return "\nNothing to show\n";
 
@@ -63,7 +67,7 @@ public class TaskListController extends Controller {
         return str.toString();
     }
 
-    public String getIncoming(ArrayTaskList tasks, LocalDateTime start, LocalDateTime end) {
+    public String getIncoming(LocalDateTime start, LocalDateTime end) {
         if (tasks == null || tasks.size() == 0)
             return "\nNothing to show\n";
 
