@@ -1,5 +1,6 @@
 package ua.edu.sumdu.j2se.kulykov.tasks.views;
 
+import ua.edu.sumdu.j2se.kulykov.tasks.controllers.IOController;
 import ua.edu.sumdu.j2se.kulykov.tasks.controllers.TaskListController;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
@@ -53,14 +54,30 @@ public class ShowTasksView extends View {
         System.out.println(tlc.getIncoming(start, end));
     }
 
+    private void clearList() {
+        System.out.println("\nAre you sure you want to clear the task list?");
+        System.out.println("Type 'yes' or 'no': ");
+        String input;
+        input = in.nextLine();
+        while (!"yes".equals(input) && !"no".equals(input)) {
+            System.out.println("Invalid input");
+            System.out.print("Type 'yes' or 'no': ");
+            input = in.nextLine();
+        }
+        if ("yes".equals(input))
+            tlc.clear();
+    }
+
     protected void menu() {
         while(true) {
             header();
             System.out.println("1. Show all tasks");
             System.out.println("2. Show calendar of tasks");
             System.out.println("3. Show incoming tasks");
-            System.out.println("4. Task editing");
-            System.out.println("5. Exit");
+            System.out.println("4. Clear task list");
+            System.out.println("5. Task editor");
+            System.out.println("6. Task writer");
+            System.out.println("7. Exit");
             System.out.print("Type your choice: ");
             String choice = in.nextLine();
             switch (choice) {
@@ -74,10 +91,18 @@ public class ShowTasksView extends View {
                     getIncoming();
                     break;
                 case "4":
-                    AddEditView addEditView = new AddEditView();
-                    addEditView.menu();
+                    clearList();
                     break;
                 case "5":
+                    AddEditRemoveView addEditRemoveView = new AddEditRemoveView();
+                    addEditRemoveView.menu();
+                    break;
+                case "6":
+                    IOView inOutView = new IOView();
+                    inOutView.menu();
+                    break;
+                case "7":
+                    new IOController().writeBin();
                     in.close();
                     return;
                 default:
@@ -88,6 +113,6 @@ public class ShowTasksView extends View {
 
     @Override
     protected void header() {
-        System.out.println("* * * * * Show tasks * * * * *");
+        System.out.println("\n* * * * * Show tasks * * * * *");
     }
 }

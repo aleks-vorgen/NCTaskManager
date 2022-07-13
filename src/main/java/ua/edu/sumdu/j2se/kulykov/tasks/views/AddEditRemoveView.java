@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
-public class AddEditView extends View {
+public class AddEditRemoveView extends View {
     private final TaskController tc = new TaskController();
     private final Scanner in = new Scanner(System.in);
 
@@ -58,6 +58,10 @@ public class AddEditView extends View {
     }
 
     private void editTask() {
+        if (tc.getSize() == 0) {
+            System.out.println("Task list is empty");
+            return;
+        }
         int id;
         String title;
         LocalDateTime time;
@@ -138,6 +142,10 @@ public class AddEditView extends View {
     }
 
     private void removeTask() {
+        if (tc.getSize() == 0) {
+            System.out.println("Task list is empty");
+            return;
+        }
         int id;
         String input;
         Task task;
@@ -223,9 +231,7 @@ public class AddEditView extends View {
         while (true) {
             try {
                 id = Integer.parseInt(input) - 1;
-                if (id < 0)
-                    throw new IllegalArgumentException();
-                if (id >= tc.getSize())
+                if (id < 0 || id >= tc.getSize())
                     throw new IndexOutOfBoundsException();
                 break;
             } catch (NumberFormatException e) {
@@ -236,16 +242,12 @@ public class AddEditView extends View {
                 System.out.println("This id does not exist");
                 System.out.print("Enter an id of the task you want to edit: ");
                 input = in.nextLine();
-            } catch (IllegalArgumentException e) {
-                System.out.println("Id must be a positive number");
-                System.out.print("Enter an id of the task you want to edit: ");
-                input = in.nextLine();
             }
         }
         return id;
     }
 
-    protected void menu() {
+    public void menu() {
         while (true) {
             header();
             System.out.println("1. Create task");
@@ -265,7 +267,7 @@ public class AddEditView extends View {
                     removeTask();
                     break;
                 case "4":
-                    return; //TODO сохранение в файл
+                    return;
                 default:
                     System.out.println("This option does not exist\n");
             }

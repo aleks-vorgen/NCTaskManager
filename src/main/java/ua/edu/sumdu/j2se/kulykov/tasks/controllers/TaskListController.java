@@ -14,7 +14,6 @@ public class TaskListController extends Controller {
     private final ArrayTaskList tasks = Main.taskList;
 
     public String getTaskList() {
-        ArrayTaskList tasks = Main.taskList;
         if (tasks.size() == 0)
             return "\nNothing to show\n";
 
@@ -84,6 +83,10 @@ public class TaskListController extends Controller {
         }
 
         return str.toString();
+    }
+    
+    public void clear() {
+        tasks.getStream().forEach(tasks::remove);
     }
 
     private void buildString(StringBuilder str, int counter, Task task, DateTimeFormatter format) {
