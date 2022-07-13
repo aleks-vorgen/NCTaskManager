@@ -108,7 +108,7 @@ public class LinkedTaskList extends AbstractTaskList implements Cloneable {
 
     @Override
     public Iterator<Task> iterator() {
-        return new Iterator<Task>() {
+        return new Iterator<>() {
             private Node current = first;
             private Node lastReturned;
             private int nextIndex;

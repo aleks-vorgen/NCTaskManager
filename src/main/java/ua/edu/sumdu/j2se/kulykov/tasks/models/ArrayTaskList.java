@@ -111,7 +111,7 @@ public class ArrayTaskList extends AbstractTaskList implements Cloneable {
 
     @Override
     public Iterator<Task> iterator() {
-        return new Iterator<Task>() {
+        return new Iterator<>() {
             int index;
             Task task;
             @Override
