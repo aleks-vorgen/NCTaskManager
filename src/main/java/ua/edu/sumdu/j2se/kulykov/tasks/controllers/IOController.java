@@ -11,16 +11,17 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class IOController extends Controller {
+    private static final Path PATH_TO_BIN = Paths.get("res/bin");
+    private static final Path PATH_TO_JSON = Paths.get("res");
+    private static final String BIN_FILE_NAME = "/binary.bin";
     private final ArrayTaskList taskList = Main.taskList;
 
     public void writeBin() {
-        Path path = Paths.get("res/bin");
-        String fileName = "/binary.bin";
-        File file = new File(path.toString(), fileName);
+        File file = new File(PATH_TO_BIN.toString(), BIN_FILE_NAME);
         try {
-            if (!Files.exists(path)) {
-                Files.createDirectories(path);
-                Files.createFile(Path.of(path + fileName));
+            if (!Files.exists(PATH_TO_BIN)) {
+                Files.createDirectories(PATH_TO_BIN);
+                Files.createFile(Path.of(PATH_TO_BIN + BIN_FILE_NAME));
             }
             TaskIO.writeBinary(taskList, file);
         } catch (IOException e) {
@@ -30,12 +31,11 @@ public class IOController extends Controller {
 
     public void writeTxt(String fileName) {
         fileName = '/' + fileName;
-        Path path = Paths.get("res");
-        File file = new File(path.toString(), fileName);
+        File file = new File(PATH_TO_JSON.toString(), fileName);
         try {
-            if (!Files.exists(path)) {
-                Files.createDirectories(path);
-                Files.createFile(Path.of(path + fileName));
+            if (!Files.exists(PATH_TO_JSON)) {
+                Files.createDirectories(PATH_TO_JSON);
+                Files.createFile(Path.of(PATH_TO_JSON + fileName));
             }
             TaskIO.writeText(taskList, file);
         } catch (IOException e) {
@@ -45,9 +45,8 @@ public class IOController extends Controller {
 
     public boolean readTxt(String fileName) {
         fileName = '/' + fileName;
-        Path path = Paths.get("res");
-        File file = new File(path.toString(), fileName);
-        if (!Files.exists(Path.of(path + fileName))) {
+        File file = new File(PATH_TO_JSON.toString(), fileName);
+        if (!Files.exists(Path.of(PATH_TO_JSON + fileName))) {
             return false;
         }
         else {
@@ -58,13 +57,11 @@ public class IOController extends Controller {
     }
 
     public void readBin() {
-        Path path = Paths.get("res/bin");
-        String fileName = "/binary.bin";
-        File file = new File(path.toString(), fileName);
+        File file = new File(PATH_TO_BIN.toString(), BIN_FILE_NAME);
         try {
-            if (!Files.exists(path)) {
-                Files.createDirectories(path);
-                Files.createFile(Path.of(path + fileName));
+            if (!Files.exists(PATH_TO_BIN)) {
+                Files.createDirectories(PATH_TO_BIN);
+                Files.createFile(Path.of(PATH_TO_BIN + BIN_FILE_NAME));
             }
             TaskIO.readBinary(taskList, file);
         } catch (IOException e) {
