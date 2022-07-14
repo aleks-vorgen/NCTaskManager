@@ -90,6 +90,8 @@ public class TaskIO {
                 task.setActive(isActive);
                 tasks.add(task);
             }
+        } catch (EOFException e) {
+            System.out.println("No tasks found");
         } catch (IOException e) {
             e.printStackTrace();
         }
