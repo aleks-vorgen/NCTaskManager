@@ -12,25 +12,17 @@ import java.util.SortedMap;
 
 public class TaskListController extends Controller {
     private final ArrayTaskList tasks = Main.taskList;
+    private static final DateTimeFormatter format = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
     public String getTaskList() {
         if (tasks.size() == 0)
             return "\nNothing to show\n";
 
         StringBuilder str = new StringBuilder();
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-        for (int i = 0; i < tasks.size(); i++) {
-            str.append(i + 1).append(". Title: ").append(tasks.getTask(i).getTitle()).append('\n');
-            if (tasks.getTask(i).isRepeated()) {
-                str.append("   Start time: ").append(tasks.getTask(i).getStartTime().format(format)).append('\n');
-                str.append("   End time: ").append(tasks.getTask(i).getEndTime().format(format)).append('\n');
-                str.append("   Interval: ").append(tasks.getTask(i).getRepeatInterval() / 3600)
-                        .append(tasks.getTask(i).getRepeatInterval() / 3600 == 1 ? " hour" : " hours").append('\n');
-            }
-            else {
-                str.append("   Time: ").append(tasks.getTask(i).getTime().format(format)).append('\n');
-            }
-            str.append("   Is active: ").append(tasks.getTask(i).isActive() ? "active" : "inactive").append("\n\n");
+        int counter = 0;
+        for (Task task : tasks) {
+            buildString(str, counter, task);
+            counter++;
         }
         return str.toString();
     }
@@ -53,13 +45,12 @@ public class TaskListController extends Controller {
             return "\nNothing to show\n";
 
         StringBuilder str = new StringBuilder();
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
         int counter = 0;
         for (LocalDateTime date : calendar.keySet()) {
             String dateFormatted = date.format(format);
             str.append("Date: ").append(dateFormatted).append('\n');
             for (Task task : calendar.get(date)) {
-                buildString(str, counter, task, format);
+                buildString(str, counter, task);
                 counter++;
             }
         }
@@ -75,10 +66,9 @@ public class TaskListController extends Controller {
             return "\nNothing to show\n";
 
         StringBuilder str = new StringBuilder();
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
         int counter = 0;
         for (Task task : incoming) {
-            buildString(str, counter, task, format);
+            buildString(str, counter, task);
             counter++;
         }
 
@@ -89,7 +79,7 @@ public class TaskListController extends Controller {
         tasks.getStream().forEach(tasks::remove);
     }
 
-    private void buildString(StringBuilder str, int counter, Task task, DateTimeFormatter format) {
+    private void buildString(StringBuilder str, int counter, Task task) {
         str.append("  ").append(counter + 1).append(". Title: ").append(task.getTitle()).append('\n');
         if (task.isRepeated()) {
             str.append("     Start time: ").append(task.getStartTime().format(format)).append('\n');
