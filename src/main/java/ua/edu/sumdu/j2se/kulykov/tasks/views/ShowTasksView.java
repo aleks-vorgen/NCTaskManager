@@ -1,5 +1,6 @@
 package ua.edu.sumdu.j2se.kulykov.tasks.views;
 
+import org.apache.log4j.Logger;
 import ua.edu.sumdu.j2se.kulykov.tasks.controllers.IOController;
 import ua.edu.sumdu.j2se.kulykov.tasks.controllers.TaskListController;
 import java.time.LocalDateTime;
@@ -7,7 +8,7 @@ import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 public class ShowTasksView extends View {
-
+    private static final Logger log = Logger.getLogger("ProgramStartsAppender");
     private final TaskListController tlc = new TaskListController();
     private final Scanner in = new Scanner(System.in);
 
@@ -104,6 +105,7 @@ public class ShowTasksView extends View {
                 case "7":
                     new IOController().writeBin();
                     in.close();
+                    log.info("Program was finished with exit code 0");
                     return;
                 default:
                     System.out.println("This option does not exist\n");

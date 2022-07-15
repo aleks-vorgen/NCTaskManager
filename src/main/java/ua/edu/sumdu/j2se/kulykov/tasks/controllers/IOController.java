@@ -1,5 +1,7 @@
 package ua.edu.sumdu.j2se.kulykov.tasks.controllers;
 
+
+import org.apache.log4j.Logger;
 import ua.edu.sumdu.j2se.kulykov.tasks.models.ArrayTaskList;
 import ua.edu.sumdu.j2se.kulykov.tasks.models.TaskIO;
 import ua.edu.sumdu.j2se.kulykov.tasks.views.Main;
@@ -11,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class IOController extends Controller {
+    private static final Logger log = Logger.getLogger(IOController.class);
     private static final Path PATH_TO_BIN = Paths.get("res/bin");
     private static final Path PATH_TO_JSON = Paths.get("res");
     private static final String BIN_FILE_NAME = "/binary.bin";
@@ -24,8 +27,9 @@ public class IOController extends Controller {
                 Files.createFile(Path.of(PATH_TO_BIN + BIN_FILE_NAME));
             }
             TaskIO.writeBinary(taskList, file);
+            log.info("File " + file.getName() + " was written by program");
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("File could not be written");
         }
     }
 
@@ -35,11 +39,11 @@ public class IOController extends Controller {
         try {
             if (!Files.exists(PATH_TO_JSON)) {
                 Files.createDirectories(PATH_TO_JSON);
-                Files.createFile(Path.of(PATH_TO_JSON + fileName));
             }
             TaskIO.writeText(taskList, file);
+            log.info("File" + file.getName() + " was written");
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 
@@ -47,11 +51,13 @@ public class IOController extends Controller {
         fileName = '/' + fileName;
         File file = new File(PATH_TO_JSON.toString(), fileName);
         if (!Files.exists(Path.of(PATH_TO_JSON + fileName))) {
+            log.warn("Entered nonexistent name of the file");
             return false;
         }
         else {
             taskList.getStream().forEach(taskList::remove);
             TaskIO.readText(taskList, file);
+            log.info("File " + file.getName() + " was read");
             return true;
         }
     }
@@ -64,8 +70,9 @@ public class IOController extends Controller {
                 Files.createFile(Path.of(PATH_TO_BIN + BIN_FILE_NAME));
             }
             TaskIO.readBinary(taskList, file);
+            log.info("File " + file.getName() + " was read by program");
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("File not found");
         }
     }
 }
