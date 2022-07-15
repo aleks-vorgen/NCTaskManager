@@ -7,10 +7,16 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
+/**
+ * Class for adding, editing or removing tasks in the task list using TaskController.
+ */
 public class AddEditRemoveView extends View {
     private final TaskController tc = new TaskController();
     private final Scanner in = new Scanner(System.in);
 
+    /**
+     * Method adds a new task to the task list using TaskController.
+     */
     private void addTask() {
         String title;
         LocalDateTime time;
@@ -57,6 +63,9 @@ public class AddEditRemoveView extends View {
         System.out.println("The task was added\n");
     }
 
+    /**
+     * Method adds a new task to the task list using TaskController.
+     */
     private void editTask() {
         if (tc.getSize() == 0) {
             System.out.println("Task list is empty");
@@ -129,6 +138,10 @@ public class AddEditRemoveView extends View {
         System.out.println("The task was edited\n");
     }
 
+    /**
+     * Method gets the yes/no input.
+     * @return 'yes' or 'no' string.
+     */
     private String getInputYesNo() {
         String input;
         System.out.print("Type 'yes' or 'no': ");
@@ -141,6 +154,9 @@ public class AddEditRemoveView extends View {
         return input;
     }
 
+    /**
+     * Method removes the task from the task list using TaskController.
+     */
     private void removeTask() {
         if (tc.getSize() == 0) {
             System.out.println("Task list is empty");
@@ -157,19 +173,20 @@ public class AddEditRemoveView extends View {
         task = tc.getTask(id);
 
         System.out.printf("You are about to remove \"%s\" task\n", task.getTitle());
-        System.out.print("You sure? (yes/no): ");
-        input = in.nextLine();
-        while (!"yes".equals(input) && !"no".equals(input)) {
-            System.out.println("Invalid input");
-            System.out.print("Type 'yes' or 'no': ");
-            input = in.nextLine();
-        }
-        if ("yes".equals(input))
+        System.out.println("Are you sure?");
+        input = getInputYesNo();
+        if ("yes".equals(input)) {
             tc.removeTask(task);
-
-        System.out.println("Task was removed\n");
+            System.out.println("Task was removed\n");
+        }
     }
 
+    /**
+     * Method gets the date time input.
+     * @param startEnd is it start/end date time or empty if the task is not repetitive.
+     * @param editing if true fields could be empty.
+     * @return LocalDateTime.
+     */
     private LocalDateTime dateTimeInput(String startEnd, boolean editing) {
         LocalDateTime dateTime;
         String input;
@@ -206,6 +223,11 @@ public class AddEditRemoveView extends View {
         return dateTime;
     }
 
+    /**
+     * Method gets the interval input.
+     * @param editing if true fields could be empty.
+     * @return interval in seconds.
+     */
     private int intervalInput(boolean editing) {
         String input;
         System.out.print("Enter interval in seconds: ");
@@ -224,6 +246,10 @@ public class AddEditRemoveView extends View {
         }
     }
 
+    /**
+     * Method gets the ID of the task being searched for.
+     * @return task id in the task list.
+     */
     private int getInputID() {
         int id;
         String input;
@@ -247,6 +273,9 @@ public class AddEditRemoveView extends View {
         return id;
     }
 
+    /**
+     * Method shows the menu for managing tasks.
+     */
     public void menu() {
         while (true) {
             header();

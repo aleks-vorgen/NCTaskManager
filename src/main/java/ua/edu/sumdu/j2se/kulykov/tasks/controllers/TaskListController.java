@@ -10,10 +10,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.Set;
 import java.util.SortedMap;
 
+/**
+ * Controller for showing task list in selected format.
+ */
 public class TaskListController extends Controller {
     private final ArrayTaskList tasks = Main.taskList;
     private static final DateTimeFormatter format = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
+    /**
+     * Method shows all tasks in task list.
+     * @return task list.
+     */
     public String getTaskList() {
         if (tasks.size() == 0)
             return "\nNothing to show\n";
@@ -27,6 +34,10 @@ public class TaskListController extends Controller {
         return str.toString();
     }
 
+    /**
+     * Method shows all tasks in task list as calendar.
+     * @return task list as calendar.
+     */
     public String getCalendar() {
         if (tasks == null || tasks.size() == 0)
             return "\nNothing to show\n";
@@ -57,6 +68,12 @@ public class TaskListController extends Controller {
         return str.toString();
     }
 
+    /**
+     * Method shows incoming tasks in task list.
+     * @param start start date time.
+     * @param end end date time.
+     * @return incoming tasks as task list.
+     */
     public String getIncoming(LocalDateTime start, LocalDateTime end) {
         if (tasks == null || tasks.size() == 0)
             return "\nNothing to show\n";
@@ -74,11 +91,20 @@ public class TaskListController extends Controller {
 
         return str.toString();
     }
-    
+
+    /**
+     * Method clears the task list.
+     */
     public void clear() {
         tasks.getStream().forEach(tasks::remove);
     }
 
+    /**
+     * Method builds a string to show it in view.
+     * @param str building string.
+     * @param counter tasks id to show as list.
+     * @param task task that converts to string.
+     */
     private void buildString(StringBuilder str, int counter, Task task) {
         str.append("  ").append(counter + 1).append(". Title: ").append(task.getTitle()).append('\n');
         if (task.isRepeated()) {

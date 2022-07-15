@@ -4,14 +4,16 @@ import ua.edu.sumdu.j2se.kulykov.tasks.controllers.IOController;
 
 import java.util.Scanner;
 
+/**
+ * Class for writing or reading json files using IOController.
+ */
 public class IOView extends View {
     private final IOController ioc = new IOController();
     private final Scanner in = new Scanner(System.in);
 
-    protected void writeBin() {
-        ioc.writeBin();
-    }
-
+    /**
+     * Method writes the JSON file to which user wants to save their task list using IOController.
+     */
     private void writeTxt() {
         System.out.println("\n* * * File saving * * *");
         String fileName;
@@ -34,10 +36,9 @@ public class IOView extends View {
         System.out.println("File was created");
     }
 
-    protected void readBin() {
-        ioc.readBin();
-    }
-
+    /**
+     * Method reads the JSON file from which user wants to load their task list using IOController.
+     */
     private void readTxt() {
         System.out.println("\n* * * File uploading * * *");
         String fileName;
@@ -50,6 +51,9 @@ public class IOView extends View {
             System.out.println("File does not exists");
     }
 
+    /**
+     * Method shows the menu for managing files.
+     */
     public void menu() {
         while (true) {
             header();

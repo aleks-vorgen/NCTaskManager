@@ -7,21 +7,33 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
+/**
+ * Class for showing task list in selected format using TaskListController.
+ */
 public class ShowTasksView extends View {
     private static final Logger log = Logger.getLogger("ProgramStartsAppender");
     private final TaskListController tlc = new TaskListController();
     private final Scanner in = new Scanner(System.in);
 
+    /**
+     * Method shows all tasks in task list using TaskListController.
+     */
     private void getTaskList() {
         System.out.println("\n* * * List of tasks * * *");
         System.out.println(tlc.getTaskList());
     }
 
+    /**
+     * Method shows all tasks in task list as calendar using TaskListController.
+     */
     private void getCalendar() {
         System.out.println("\n* * * Calendar * * *");
         System.out.println(tlc.getCalendar());
     }
 
+    /**
+     * Method shows incoming tasks in task list using TaskListController.
+     */
     private void getIncoming() {
         LocalDateTime start;
         LocalDateTime end;
@@ -55,6 +67,9 @@ public class ShowTasksView extends View {
         System.out.println(tlc.getIncoming(start, end));
     }
 
+    /**
+     * Method clears the task list using TaskListController.
+     */
     private void clearList() {
         System.out.println("\nAre you sure you want to clear the task list?");
         System.out.println("Type 'yes' or 'no': ");
@@ -69,6 +84,9 @@ public class ShowTasksView extends View {
             tlc.clear();
     }
 
+    /**
+     * Method shows the menu for showing task list in different formats.
+     */
     protected void menu() {
         while(true) {
             header();

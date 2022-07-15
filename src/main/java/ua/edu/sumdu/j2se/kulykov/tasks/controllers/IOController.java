@@ -12,6 +12,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * Controller for writing or reading binary/json files.
+ */
 public class IOController extends Controller {
     private static final Logger log = Logger.getLogger(IOController.class);
     private static final Path PATH_TO_BIN = Paths.get("res/bin");
@@ -19,6 +22,9 @@ public class IOController extends Controller {
     private static final String BIN_FILE_NAME = "/binary.bin";
     private final ArrayTaskList taskList = Main.taskList;
 
+    /**
+     * Method writes the binary file where program finishes from ShowTasksView.
+     */
     public void writeBin() {
         File file = new File(PATH_TO_BIN.toString(), BIN_FILE_NAME);
         try {
@@ -33,6 +39,10 @@ public class IOController extends Controller {
         }
     }
 
+    /**
+     * Method writes the JSON file.
+     * @param fileName name of the writing file.
+     */
     public void writeTxt(String fileName) {
         fileName = '/' + fileName;
         File file = new File(PATH_TO_JSON.toString(), fileName);
@@ -47,6 +57,11 @@ public class IOController extends Controller {
         }
     }
 
+    /**
+     * Method reads the JSON file.
+     * @param fileName name of the reading file.
+     * @return false if file not exists and true if exists one.
+     */
     public boolean readTxt(String fileName) {
         fileName = '/' + fileName;
         File file = new File(PATH_TO_JSON.toString(), fileName);
@@ -62,6 +77,9 @@ public class IOController extends Controller {
         }
     }
 
+    /**
+     * Method reads the binary file where program starts.
+     */
     public void readBin() {
         File file = new File(PATH_TO_BIN.toString(), BIN_FILE_NAME);
         try {
