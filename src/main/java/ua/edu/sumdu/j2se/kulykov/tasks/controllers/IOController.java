@@ -4,7 +4,8 @@ package ua.edu.sumdu.j2se.kulykov.tasks.controllers;
 import org.apache.log4j.Logger;
 import ua.edu.sumdu.j2se.kulykov.tasks.models.ArrayTaskList;
 import ua.edu.sumdu.j2se.kulykov.tasks.models.TaskIO;
-import ua.edu.sumdu.j2se.kulykov.tasks.views.Main;
+import ua.edu.sumdu.j2se.kulykov.tasks.views.IOView;
+import ua.edu.sumdu.j2se.kulykov.tasks.views.ShowTasksView;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,17 +14,43 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * Controller for writing or reading binary/json files.
+ * Controller class for writing or reading binary/json files.
  */
 public class IOController extends Controller {
     private static final Logger log = Logger.getLogger(IOController.class);
     private static final Path PATH_TO_BIN = Paths.get("res/bin");
     private static final Path PATH_TO_JSON = Paths.get("res");
     private static final String BIN_FILE_NAME = "/binary.bin";
-    private final ArrayTaskList taskList = Main.taskList;
+    private ArrayTaskList taskList = null;
+    private IOView ioView = null;
 
     /**
-     * Method writes the binary file where program finishes from ShowTasksView.
+     * Default constructor.
+     */
+    public IOController() {
+        super();
+    }
+
+    /**
+     * Constructor which initialize only taskList.
+     * @param taskList list of tasks.
+     */
+    public IOController(ArrayTaskList taskList) {
+        this.taskList = taskList;
+    }
+
+    /**
+     * Constructor which initialize taskList and ioView.
+     * @param taskList list of tasks.
+     * @param ioView IOView.
+     */
+    public IOController(ArrayTaskList taskList, IOView ioView) {
+        this.taskList = taskList;
+        this.ioView = ioView;
+    }
+
+    /**
+     * Method writes the binary file where program finishes from TaskListController.
      */
     public void writeBin() {
         File file = new File(PATH_TO_BIN.toString(), BIN_FILE_NAME);
@@ -41,39 +68,44 @@ public class IOController extends Controller {
 
     /**
      * Method writes the JSON file.
-     * @param fileName name of the writing file.
      */
-    public void writeTxt(String fileName) {
-        fileName = '/' + fileName;
+    private void writeTxt() {
+        ioView.message("\n* * * File saving * * *\n");
+        String fileName;
+
+        fileName = '/' + ioView.getFileNameInput();
         File file = new File(PATH_TO_JSON.toString(), fileName);
         try {
             if (!Files.exists(PATH_TO_JSON)) {
                 Files.createDirectories(PATH_TO_JSON);
             }
             TaskIO.writeText(taskList, file);
-            log.info("File" + file.getName() + " was written");
+            log.info("File " + file.getName() + " was written");
+            ioView.message("File saved successfully\n");
         } catch (IOException e) {
+            ioView.message("File did not save. Check logfile for details.");
             log.error(e.getMessage());
         }
     }
 
     /**
      * Method reads the JSON file.
-     * @param fileName name of the reading file.
-     * @return false if file not exists and true if exists one.
      */
-    public boolean readTxt(String fileName) {
-        fileName = '/' + fileName;
+    private void readTxt() {
+        ioView.message("\n* * * File uploading * * *\n");
+        String fileName;
+
+        fileName = '/' + ioView.getFileNameInput();
         File file = new File(PATH_TO_JSON.toString(), fileName);
         if (!Files.exists(Path.of(PATH_TO_JSON + fileName))) {
             log.warn("Entered nonexistent name of the file");
-            return false;
+            ioView.message("File \"" + file.getName() + "\" does not exists\n");
         }
         else {
             taskList.getStream().forEach(taskList::remove);
             TaskIO.readText(taskList, file);
             log.info("File " + file.getName() + " was read");
-            return true;
+            ioView.message("File uploaded successfully\n");
         }
     }
 
@@ -91,6 +123,24 @@ public class IOController extends Controller {
             log.info("File " + file.getName() + " was read by program");
         } catch (IOException e) {
             log.error("File not found");
+        }
+    }
+
+    public void showMenu() {
+        int key;
+        key = ioView.menu();
+        switch (key) {
+            case 1:
+                writeTxt();
+                showMenu();
+                break;
+            case 2:
+                readTxt();
+                showMenu();
+                break;
+            case 3:
+                new TaskListController(taskList, new ShowTasksView()).showMenu();
+                break;
         }
     }
 }

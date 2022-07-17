@@ -2,21 +2,20 @@ package ua.edu.sumdu.j2se.kulykov.tasks.views;
 
 import org.apache.log4j.Logger;
 import ua.edu.sumdu.j2se.kulykov.tasks.controllers.IOController;
+import ua.edu.sumdu.j2se.kulykov.tasks.controllers.TaskListController;
 import ua.edu.sumdu.j2se.kulykov.tasks.models.ArrayTaskList;
 
 public class Main {
-	public static final Logger log = Logger.getLogger("ProgramStartsAppender");
-	public static final ArrayTaskList taskList = new ArrayTaskList();
-
-	static
-	{
-		new IOController().readBin();
-	}
+	private static final Logger log = Logger.getLogger("ProgramStartsAppender");
 
 	public static void main(String[] args) {
 		log.info("Program was started");
-		ShowTasksView stv = new ShowTasksView();
 
-		stv.menu();
+		ArrayTaskList taskList = new ArrayTaskList();
+		new IOController(taskList).readBin();
+
+		TaskListController tlc = new TaskListController(taskList, new ShowTasksView());
+
+		tlc.showMenu();
 	}
 }

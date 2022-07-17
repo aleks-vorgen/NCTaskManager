@@ -95,7 +95,7 @@ public class TaskIO {
         } catch (EOFException e) {
             log.info("File was empty on line 65");
         } catch (IOException e) {
-            log.error("File not existent on line 65");
+            log.error("File nonexistent on line 65");
         }
     }
 

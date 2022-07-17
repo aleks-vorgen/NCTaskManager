@@ -1,8 +1,5 @@
 package ua.edu.sumdu.j2se.kulykov.tasks.views;
 
-import ua.edu.sumdu.j2se.kulykov.tasks.controllers.TaskController;
-import ua.edu.sumdu.j2se.kulykov.tasks.models.Task;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
@@ -11,183 +8,41 @@ import java.util.Scanner;
  * Class for adding, editing or removing tasks in the task list using TaskController.
  */
 public class AddEditRemoveView extends View {
-    private final TaskController tc = new TaskController();
     private final Scanner in = new Scanner(System.in);
 
     /**
-     * Method adds a new task to the task list using TaskController.
+     * Method gets the task title input.
+     * @param editing field can be empty if editing performed.
+     * @return string task title.
      */
-    private void addTask() {
-        String title;
-        LocalDateTime time;
-        LocalDateTime time_start;
-        LocalDateTime time_end;
-        int time_interval_repeat;
-        boolean isRepeated;
+    public String getTitleInput(boolean editing) {
         String input;
-
-        System.out.println("\n* * * Task adding * * *");
-
         System.out.print("Enter title: ");
         input = in.nextLine();
-        while (input.equals("")) {
-            System.out.println("Invalid input");
-            System.out.print("Enter title: ");
-            input = in.nextLine();
-        }
-        title = input;
+        if (editing && "".equals(input.trim()))
+            return null;
 
-        System.out.println("Is your task will be repetitive?");
-        System.out.print("Type 'yes' or 'no': ");
-        input = in.nextLine();
-        while (input.equals("") || !"yes".equals(input) && !"no".equals(input)) {
-            System.out.println("Invalid input");
-            System.out.print("Type 'yes' or 'no': ");
-            input = in.nextLine();
-        }
-        isRepeated = input.equals("yes");
-
-        if (isRepeated) {
-            time_start = dateTimeInput(" start", false);
-            time_end = dateTimeInput(" end", false);
-
-            time_interval_repeat = intervalInput(false);
-
-            tc.addTask(title, time_start, time_end, time_interval_repeat);
-        } else {
-            time = dateTimeInput("", false);
-
-            tc.addTask(title, time);
-        }
-
-        System.out.println("The task was added\n");
-    }
-
-    /**
-     * Method adds a new task to the task list using TaskController.
-     */
-    private void editTask() {
-        if (tc.getSize() == 0) {
-            System.out.println("Task list is empty");
-            return;
-        }
-        int id;
-        String title;
-        LocalDateTime time;
-        LocalDateTime time_start;
-        LocalDateTime time_end;
-        int time_interval_repeat;
-        boolean isActive;
-        boolean isRepeated;
-        Task task;
-        String input;
-
-        System.out.println("\n* * * Task editing * * *");
-
-        System.out.print("Enter an id of the task you want to edit: ");
-        id = getInputID();
-        task = tc.getTask(id);
-
-        System.out.printf("You are about to edit \"%s\" task\n", task.getTitle());
-        System.out.print("You sure? (yes/no): ");
-        input = getInputYesNo();
-        if ("no".equals(input))
-            return;
-
-        System.out.println("*If you don`t need to change some attributes, leave it blank");
-
-        System.out.print("Enter new title: ");
-        input = in.nextLine();
-        if (!"".equals(input.trim()))
-            title = input;
-        else
-            title = task.getTitle();
-
-        System.out.printf("Your task is %s. Do you want to change this?\n",
-                task.isRepeated() ? "repetitive" : "not repetitive");
-        input = getInputYesNo();
-        isRepeated = "yes".equals(input) != task.isRepeated(); //If yes, isRepetitive changes
-
-        System.out.printf("Your task is %s. Do you want to change this?\n",
-                task.isActive() ? "active" : "inactive");
-        input = getInputYesNo();
-        isActive = "yes".equals(input) != task.isActive(); //If yes, isActive changes
-
-        if (isRepeated) {
-            LocalDateTime tmpDateTime;
-            int tmpInterval;
-            tmpDateTime = dateTimeInput(" start", true);
-            time_start = tmpDateTime == null ? task.getStartTime() : tmpDateTime;
-
-            tmpDateTime = dateTimeInput(" end", true);
-            time_end = tmpDateTime == null ? task.getEndTime() : tmpDateTime;
-
-            tmpInterval = intervalInput(true);
-            time_interval_repeat = tmpInterval == -1 ? task.getRepeatInterval() : tmpInterval;
-
-            tc.editTask(title, time_start, time_end, time_interval_repeat, isActive, id);
-        }
-        else {
-            LocalDateTime tmpDateTime;
-            tmpDateTime = dateTimeInput("", true);
-            time = tmpDateTime == null ? task.getTime() : tmpDateTime;
-
-            tc.editTask(title, time, isActive, id);
-        }
-
-        System.out.println("The task was edited\n");
-    }
-
-    /**
-     * Method gets the yes/no input.
-     * @return 'yes' or 'no' string.
-     */
-    private String getInputYesNo() {
-        String input;
-        System.out.print("Type 'yes' or 'no': ");
-        input = in.nextLine();
-        while (!"yes".equals(input) && !"no".equals(input)) {
-            System.out.println("Invalid input");
-            System.out.print("Type 'yes' or 'no': ");
-            input = in.nextLine();
-        }
         return input;
     }
 
     /**
-     * Method removes the task from the task list using TaskController.
+     * Method gets the task type (repetitive or not).
+     * @return boolean 'yes' or 'no'.
      */
-    private void removeTask() {
-        if (tc.getSize() == 0) {
-            System.out.println("Task list is empty");
-            return;
-        }
-        int id;
+    public boolean getIsRepeatedInput() {
         String input;
-        Task task;
-
-        System.out.println("\n* * * Task removing * * *");
-
-        System.out.print("Enter an id of the task you want to remove: ");
-        id = getInputID();
-        task = tc.getTask(id);
-
-        System.out.printf("You are about to remove \"%s\" task\n", task.getTitle());
-        System.out.println("Are you sure?");
-        input = getInputYesNo();
-        if ("yes".equals(input)) {
-            tc.removeTask(task);
-            System.out.println("Task was removed\n");
-        }
+        System.out.println("Is your task will be repetitive?");
+        return getYesNoInput();
     }
 
     /**
-     * Method gets the date time input.
-     * @param startEnd is it start/end date time or empty if the task is not repetitive.
-     * @param editing if true fields could be empty.
+     * Method gets date and time input.
+     * @param startEnd string for start or end date time.
+     * @param editing field can be empty if editing performed.
      * @return LocalDateTime.
      */
-    private LocalDateTime dateTimeInput(String startEnd, boolean editing) {
+    public LocalDateTime getDateTimeInput(String startEnd, boolean editing) {
+        Scanner in = new Scanner(System.in);
         LocalDateTime dateTime;
         String input;
         System.out.printf("Enter%s date in format yyyy-mm-dd: ", startEnd);
@@ -224,11 +79,12 @@ public class AddEditRemoveView extends View {
     }
 
     /**
-     * Method gets the interval input.
-     * @param editing if true fields could be empty.
-     * @return interval in seconds.
+     * Method gets the interval at which the task will be repeated.
+     * @param editing field can be empty if editing performed.
+     * @return int interval in seconds.
      */
-    private int intervalInput(boolean editing) {
+    public int getIntervalInput(boolean editing) {
+        Scanner in = new Scanner(System.in);
         String input;
         System.out.print("Enter interval in seconds: ");
         input = in.nextLine();
@@ -248,25 +104,21 @@ public class AddEditRemoveView extends View {
 
     /**
      * Method gets the ID of the task being searched for.
-     * @return task id in the task list.
+     * @param editRemove string for edit or remove task
+     * @return int task id in the task list.
      */
-    private int getInputID() {
+    public int getIdInput(String editRemove) {
         int id;
         String input;
+        System.out.printf("Enter an id of the task you want to %s: ", editRemove);
         input = in.nextLine();
         while (true) {
             try {
                 id = Integer.parseInt(input) - 1;
-                if (id < 0 || id >= tc.getSize())
-                    throw new IndexOutOfBoundsException();
                 break;
             } catch (NumberFormatException e) {
                 System.out.println("This is not a number");
-                System.out.print("Enter an id of the task you want to edit: ");
-                input = in.nextLine();
-            } catch (IndexOutOfBoundsException e) {
-                System.out.println("This id does not exist");
-                System.out.print("Enter an id of the task you want to edit: ");
+                System.out.printf("Enter an id of the task you want to %s: ", editRemove);
                 input = in.nextLine();
             }
         }
@@ -276,7 +128,7 @@ public class AddEditRemoveView extends View {
     /**
      * Method shows the menu for managing tasks.
      */
-    public void menu() {
+    public int menu() {
         while (true) {
             header();
             System.out.println("1. Create task");
@@ -287,16 +139,13 @@ public class AddEditRemoveView extends View {
             String choice = in.nextLine();
             switch (choice) {
                 case "1":
-                    addTask();
-                    break;
+                    return 1;
                 case "2":
-                    editTask();
-                    break;
+                    return 2;
                 case "3":
-                    removeTask();
-                    break;
+                    return 3;
                 case "4":
-                    return;
+                    return 4;
                 default:
                     System.out.println("This option does not exist\n");
             }
@@ -305,7 +154,7 @@ public class AddEditRemoveView extends View {
 
     @Override
     protected void header() {
-        String header = "\n* * * * * Task editing * * * * *";
+        String header = "\n* * * * * Task editor * * * * *";
         System.out.println(header);
     }
 }

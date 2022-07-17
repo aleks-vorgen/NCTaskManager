@@ -2,81 +2,171 @@ package ua.edu.sumdu.j2se.kulykov.tasks.controllers;
 
 import ua.edu.sumdu.j2se.kulykov.tasks.models.ArrayTaskList;
 import ua.edu.sumdu.j2se.kulykov.tasks.models.Task;
-import ua.edu.sumdu.j2se.kulykov.tasks.views.Main;
+import ua.edu.sumdu.j2se.kulykov.tasks.views.AddEditRemoveView;
+import ua.edu.sumdu.j2se.kulykov.tasks.views.ShowTasksView;
 
 import java.time.LocalDateTime;
 
 /**
- * Controller for adding, removing or editing tasks in the task list.
+ * Controller class for adding, removing or editing tasks in the task list.
  */
 public class TaskController extends Controller {
-    private final ArrayTaskList taskList = Main.taskList;
+    private final ArrayTaskList taskList;
+    private final AddEditRemoveView editingView;
 
     /**
-     * Method returns the task.
-     * @param id task id in the task list.
-     * @return Task.
+     * Constructor which initialize taskList and editingView.
+     * @param taskList list of tasks.
+     * @param editingView AddEditRemoveView.
      */
-    public Task getTask(int id) {
-        return taskList.getTask(id);
+    public TaskController(ArrayTaskList taskList, AddEditRemoveView editingView) {
+        this.taskList = taskList;
+        this.editingView = editingView;
     }
 
     /**
-     * Method adds the not repetitive task to the task list using Task constructor.
-     * @param title task name.
-     * @param time task execution time.
+     * Method adds the task to the task list.
      */
-    public void addTask(String title, LocalDateTime time) {
-        taskList.add(new Task(title, time));
+    private void addTask() {
+        String title;
+        LocalDateTime time;
+        LocalDateTime time_start;
+        LocalDateTime time_end;
+        int time_interval_repeat;
+        boolean isRepeated;
+        title = editingView.getTitleInput(false);
+        isRepeated = editingView.getIsRepeatedInput();
+
+        if (isRepeated) {
+            time_start = editingView.getDateTimeInput(" start", false);
+            time_end = editingView.getDateTimeInput(" end", false);
+            time_interval_repeat = editingView.getIntervalInput(false);
+
+            taskList.add(new Task(title, time_start, time_end, time_interval_repeat));
+        }
+        else {
+            time = editingView.getDateTimeInput("", false);
+
+            taskList.add(new Task(title, time));
+        }
+        editingView.message("Task \"" + title + "\" was added successfully");
     }
 
     /**
-     * Method adds the repetitive task to the task list using Task constructor.
-     * @param title task name.
-     * @param timeStart task execution start time.
-     * @param timeEnd task execution end time.
-     * @param interval interval at which the task is executed.
+     * Method edits the task in the task list.
      */
-    public void addTask(String title, LocalDateTime timeStart, LocalDateTime timeEnd, int interval) {
-        taskList.add(new Task(title, timeStart, timeEnd, interval));
-    }
+    private void editTask() {
+        editingView.message("\n* * * Task editing * * *\n");
+        Task task;
+        String title;
+        LocalDateTime timeStart;
+        LocalDateTime timeEnd;
+        LocalDateTime time;
+        boolean isRepeated;
+        boolean isActive;
+        int interval;
 
-    /**
-     * Method edits the repetitive task in the task list.
-     * @param title task name.
-     * @param time_start task execution start time.
-     * @param time_end task execution end time.
-     * @param time_interval_repeat interval at which the task is executed.
-     * @param isActive task is active or not.
-     * @param id task id in the task list.
-     */
-    public void editTask(String title, LocalDateTime time_start, LocalDateTime time_end,
-                                  int time_interval_repeat, boolean isActive, int id) {
-        Task task = taskList.getTask(id);
-        task.setTitle(title);
-        task.setTime(time_start, time_end, time_interval_repeat);
+        task = taskFinder("edit");
+
+        editingView.message("Are you sure you want to edit \"" + task.getTitle() + "\" task?\n");
+        if (!editingView.getYesNoInput())
+            return;
+
+        title = editingView.getTitleInput(true);
+        if (title == null)
+            title = task.getTitle();
+
+        editingView.message("Your task is " +
+                (task.isRepeated() ? "repetitive" : "not repetitive") +
+                ". Do you want to change this?\n");
+        if (editingView.getYesNoInput())
+            isRepeated = !task.isRepeated();
+        else
+            isRepeated = task.isRepeated();
+
+        editingView.message("Your task is " +
+                (task.isActive() ? "active" : "inactive") +
+                ". Do you want to change this?\n");
+        if (editingView.getYesNoInput())
+            isActive = !task.isActive();
+        else
+            isActive = task.isActive();
+
+        if (isRepeated) {
+            LocalDateTime tmpDateTime;
+            int tmpInterval;
+            tmpDateTime = editingView.getDateTimeInput(" start", true);
+            timeStart = tmpDateTime == null ? task.getStartTime() : tmpDateTime;
+
+            tmpDateTime = editingView.getDateTimeInput(" end", true);
+            timeEnd = tmpDateTime == null ? task.getEndTime() : tmpDateTime;
+
+            tmpInterval = editingView.getIntervalInput(true);
+            interval = tmpInterval == -1 ? task.getRepeatInterval() : tmpInterval;
+
+            task.setTitle(title);
+            task.setTime(timeStart, timeEnd, interval);
+        }
+        else {
+            LocalDateTime tmpDateTime;
+            tmpDateTime = editingView.getDateTimeInput("", true);
+            time = tmpDateTime == null ? task.getTime() : tmpDateTime;
+
+            task.setTitle(title);
+            task.setTime(time);
+        }
         task.setActive(isActive);
-    }
-
-    /**
-     * Method edits the not repetitive task in the task list.
-     * @param title task name.
-     * @param time task execution time.
-     * @param isActive task is active or not.
-     * @param id task id in the task list.
-     */
-    public void editTask(String title, LocalDateTime time, boolean isActive, int id) {
-        Task task = taskList.getTask(id);
-        task.setTitle(title);
-        task.setTime(time);
-        task.setActive(isActive);
+        editingView.message("Task \"" + title + "\" was edited successfully\n");
     }
 
     /**
      * Method removes the task from the task list.
-     * @param task removing task.
      */
-    public void removeTask(Task task) {
-        taskList.remove(task);
+    private void removeTask() {
+        Task task;
+        task = taskFinder("remove");
+        editingView.message("Are you sure you want to remove \"" + task.getTitle() + "\" task?\n");
+        if (editingView.getYesNoInput()) {
+            taskList.remove(task);
+            editingView.message("Task \"" + task.getTitle() + "\" was removed successfully\n");
+        }
+    }
+
+    /**
+     * Method finds the task in task list using entered ID of the task.
+     * @param editRemove string for edit or remove task.
+     * @return found task.
+     */
+    private Task taskFinder(String editRemove) {
+        int id;
+        id = editingView.getIdInput(editRemove);
+        while ( id < 0 || id > taskList.size()) {
+            editingView.message("Task with this id does not exists\n");
+            id = editingView.getIdInput(editRemove);
+        }
+
+        return taskList.getTask(id);
+    }
+
+    public void showMenu() {
+        int key;
+        key = editingView.menu();
+        switch (key) {
+            case 1:
+                addTask();
+                showMenu();
+                break;
+            case 2:
+                editTask();
+                showMenu();
+                break;
+            case 3:
+                removeTask();
+                showMenu();
+                break;
+            case 4:
+                new TaskListController(taskList, new ShowTasksView()).showMenu();
+                break;
+        }
     }
 }
