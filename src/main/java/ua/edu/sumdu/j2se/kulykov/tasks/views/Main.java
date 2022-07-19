@@ -14,6 +14,9 @@ public class Main {
 		ArrayTaskList taskList = new ArrayTaskList();
 		new IOController(taskList).readBin();
 
+		Notificator notificator = new Notificator(taskList, new ShowTasksView());
+		notificator.start();
+
 		TaskListController tlc = new TaskListController(taskList, new ShowTasksView());
 
 		tlc.showMenu();

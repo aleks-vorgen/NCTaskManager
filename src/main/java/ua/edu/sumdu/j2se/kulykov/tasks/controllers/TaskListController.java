@@ -16,9 +16,13 @@ import java.util.SortedMap;
  */
 public class TaskListController extends Controller {
     private final ArrayTaskList taskList;
-    private final ShowTasksView stv;
+    private ShowTasksView stv;
     private static final Logger log = Logger.getLogger("ProgramStartsAppender");
     private static final DateTimeFormatter format = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+
+    public TaskListController(ArrayTaskList taskList) {
+        this.taskList = taskList;
+    }
 
     public TaskListController(ArrayTaskList taskList, ShowTasksView stv) {
         this.taskList = taskList;
@@ -85,7 +89,7 @@ public class TaskListController extends Controller {
     /**
      * Method shows incoming tasks in task list.
      */
-    private void getIncoming() {
+    public void getIncoming() {
         stv.message("\n* * * Incoming tasks * * *\n");
         if (taskList == null || taskList.size() == 0) {
             stv.message("\nNothing to show\n");
