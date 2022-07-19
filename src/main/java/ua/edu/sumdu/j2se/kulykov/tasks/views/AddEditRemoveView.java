@@ -17,7 +17,7 @@ public class AddEditRemoveView extends View {
      */
     public String getTitleInput(boolean editing) {
         String input;
-        System.out.print("Enter title: ");
+        message("Enter title: ");
         input = in.nextLine();
         if (editing && "".equals(input.trim()))
             return null;
@@ -30,8 +30,7 @@ public class AddEditRemoveView extends View {
      * @return boolean 'yes' or 'no'.
      */
     public boolean getIsRepeatedInput() {
-        String input;
-        System.out.println("Is your task will be repetitive?");
+        message("Is your task will be repetitive?\n");
         return getYesNoInput();
     }
 
@@ -45,7 +44,7 @@ public class AddEditRemoveView extends View {
         Scanner in = new Scanner(System.in);
         LocalDateTime dateTime;
         String input;
-        System.out.printf("Enter%s date in format yyyy-mm-dd: ", startEnd);
+        message("Enter" + startEnd + " date in format yyyy-mm-dd: ");
         input = in.nextLine();
         if (editing && "".equals(input.trim()))
             return null;
@@ -55,13 +54,13 @@ public class AddEditRemoveView extends View {
                 dateTime = LocalDateTime.parse(input + "T00:00:00");
                 break;
             } catch (DateTimeParseException e) {
-                System.out.println(e.getMessage());
-                System.out.printf("Enter%s start date in format yyyy-mm-dd: ", startEnd);
+                message(e.getMessage() + '\n');
+                message("Enter" + startEnd + " start date in format yyyy-mm-dd: ");
                 input = in.nextLine();
             }
         }
 
-        System.out.printf("Enter%s time in format hh:mm : ", startEnd);
+        message("Enter" + startEnd + " time in format hh:mm : ");
         input = in.nextLine();
         while(true) {
             try {
@@ -70,8 +69,8 @@ public class AddEditRemoveView extends View {
                 dateTime = dateTime.plusMinutes(tmpTime.getMinute());
                 break;
             } catch (DateTimeParseException e) {
-                System.out.println(e.getMessage());
-                System.out.printf("Enter%s time in format hh:mm : ", startEnd);
+                message(e.getMessage() + '\n');
+                message("Enter" + startEnd + " time in format hh:mm : ");
                 input = in.nextLine();
             }
         }
@@ -86,7 +85,7 @@ public class AddEditRemoveView extends View {
     public int getIntervalInput(boolean editing) {
         Scanner in = new Scanner(System.in);
         String input;
-        System.out.print("Enter interval in seconds: ");
+        message("Enter interval in seconds: ");
         input = in.nextLine();
         if (editing && "".equals(input.trim()))
             return -1;
@@ -95,8 +94,8 @@ public class AddEditRemoveView extends View {
             try {
                 return Integer.parseInt(input);
             } catch (NumberFormatException e) {
-                System.out.println("This is not a number");
-                System.out.print("Enter an interval in seconds: ");
+                message("This is not a number\n");
+                message("Enter an interval in seconds: ");
                 input = in.nextLine();
             }
         }
@@ -110,15 +109,15 @@ public class AddEditRemoveView extends View {
     public int getIdInput(String editRemove) {
         int id;
         String input;
-        System.out.printf("Enter an id of the task you want to %s: ", editRemove);
+        message("Enter an id of the task you want to " + editRemove + ": ");
         input = in.nextLine();
         while (true) {
             try {
                 id = Integer.parseInt(input) - 1;
                 break;
             } catch (NumberFormatException e) {
-                System.out.println("This is not a number");
-                System.out.printf("Enter an id of the task you want to %s: ", editRemove);
+                message("This is not a number\n");
+                message("Enter an id of the task you want to " + editRemove + ": ");
                 input = in.nextLine();
             }
         }
@@ -131,11 +130,11 @@ public class AddEditRemoveView extends View {
     public int menu() {
         while (true) {
             header();
-            System.out.println("1. Create task");
-            System.out.println("2. Edit task");
-            System.out.println("3. Remove task");
-            System.out.println("4. Back to main menu");
-            System.out.print("Type your choice: ");
+            message("1. Create task\n");
+            message("2. Edit task\n");
+            message("3. Remove task\n");
+            message("4. Back to main menu\n");
+            message("Type your choice: ");
             String choice = in.nextLine();
             switch (choice) {
                 case "1":
@@ -147,14 +146,14 @@ public class AddEditRemoveView extends View {
                 case "4":
                     return 4;
                 default:
-                    System.out.println("This option does not exist\n");
+                    message("This option does not exist\n\n");
             }
         }
     }
 
     @Override
     protected void header() {
-        String header = "\n* * * * * Task editor * * * * *";
-        System.out.println(header);
+        String header = "\n* * * * * Task editor * * * * *\n";
+        message(header);
     }
 }

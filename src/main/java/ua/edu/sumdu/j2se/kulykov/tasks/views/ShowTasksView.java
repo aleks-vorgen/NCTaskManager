@@ -20,15 +20,15 @@ public class ShowTasksView extends View {
         Scanner in = new Scanner(System.in);
         LocalDateTime dateTime;
         String input;
-        System.out.printf("Enter%s date in format yyyy-mm-dd: ", startEnd);
+        message("Enter" + startEnd + " date in format yyyy-mm-dd: ");
         input = in.nextLine();
         while(true) {
             try {
                 dateTime = LocalDateTime.parse(input + "T00:00:00");
                 break;
             } catch (DateTimeParseException e) {
-                System.out.println(e.getMessage());
-                System.out.printf("Enter%s date in format yyyy-mm-dd: ", startEnd);
+                message(e.getMessage() + '\n');
+                message("Enter" + startEnd + " date in format yyyy-mm-dd: ");
                 input = in.nextLine();
             }
         }
@@ -42,14 +42,14 @@ public class ShowTasksView extends View {
     public int menu() {
         while(true) {
             header();
-            System.out.println("1. Show all tasks");
-            System.out.println("2. Show calendar of tasks");
-            System.out.println("3. Show incoming tasks");
-            System.out.println("4. Clear task list");
-            System.out.println("5. Task editor");
-            System.out.println("6. Task writer");
-            System.out.println("7. Exit");
-            System.out.print("Type your choice: ");
+            message("1. Show all tasks\n");
+            message("2. Show calendar of tasks\n");
+            message("3. Show incoming tasks\n");
+            message("4. Clear task list\n");
+            message("5. Task editor\n");
+            message("6. Task writer\n");
+            message("7. Exit\n");
+            message("Type your choice: ");
             String choice = in.nextLine();
             switch (choice) {
                 case "1":
@@ -67,13 +67,13 @@ public class ShowTasksView extends View {
                 case "7":
                     return 7;
                 default:
-                    System.out.println("This option does not exist\n");
+                    message("This option does not exist\n\n");
             }
         }
     }
 
     @Override
     protected void header() {
-        System.out.println("\n* * * * * Show tasks * * * * *");
+        message("\n* * * * * Show tasks * * * * *\n");
     }
 }

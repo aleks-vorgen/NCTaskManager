@@ -1,5 +1,6 @@
 package ua.edu.sumdu.j2se.kulykov.tasks.views;
 
+import org.apache.log4j.Logger;
 import ua.edu.sumdu.j2se.kulykov.tasks.models.ArrayTaskList;
 import ua.edu.sumdu.j2se.kulykov.tasks.models.Task;
 import ua.edu.sumdu.j2se.kulykov.tasks.models.Tasks;
@@ -11,6 +12,7 @@ public class Notificator extends Thread {
     private final ArrayTaskList taskList;
     private final ShowTasksView stv;
     private final DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm");
+    private static final Logger log = Logger.getLogger(Notificator.class);
 
     public Notificator(ArrayTaskList taskList, ShowTasksView stv) {
         this.taskList = taskList;
@@ -42,9 +44,9 @@ public class Notificator extends Thread {
 
                 sleep(30000);
             } catch (NullPointerException e) {
-                stv.message("nullptr ex\n");
+                log.warn("Task list was empty");
             } catch (InterruptedException e) {
-                stv.message("Interrupted\n");
+                log.warn("Thread was interrupted");
             }
         }
     }

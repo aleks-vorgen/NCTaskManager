@@ -26,11 +26,11 @@ public abstract class View {
     public boolean getYesNoInput() {
         Scanner in = new Scanner(System.in);
         String input;
-        System.out.print("Type 'yes' or 'no': ");
+        message("Type 'yes' or 'no': ");
         input = in.nextLine();
         while (!"yes".equals(input) && !"no".equals(input)) {
-            System.out.println("Invalid input");
-            System.out.print("Type 'yes' or 'no': ");
+            message("Invalid input\n");
+            message("Type 'yes' or 'no': ");
             input = in.nextLine();
         }
         return "yes".equals(input);

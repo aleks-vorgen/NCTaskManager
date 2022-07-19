@@ -40,10 +40,10 @@ public class IOView extends View {
     public int menu() {
         while (true) {
             header();
-            System.out.println("1. Save task list to text file");
-            System.out.println("2. Upload task list from text file");
-            System.out.println("3. Back to main menu");
-            System.out.print("Type your choice: ");
+            message("1. Save task list to text file\n");
+            message("2. Upload task list from text file\n");
+            message("3. Back to main menu\n");
+            message("Type your choice: ");
             String choice = in.nextLine();
             switch (choice) {
                 case "1":
@@ -53,13 +53,13 @@ public class IOView extends View {
                 case "3":
                     return 3;
                 default:
-                    System.out.println("This option does not exist\n");
+                    message("This option does not exist\n\n");
             }
         }
     }
 
     @Override
     protected void header() {
-        System.out.println("\n* * * * * Task writer * * * * *");
+        message("\n* * * * * Task writer * * * * *\n");
     }
 }
