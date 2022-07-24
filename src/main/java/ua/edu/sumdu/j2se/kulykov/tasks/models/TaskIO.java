@@ -11,7 +11,7 @@ import com.google.gson.stream.JsonWriter;
 import org.apache.log4j.Logger;
 
 public class TaskIO {
-    private static final Logger log = Logger.getLogger(TaskIO.class);
+    private static final Logger LOG = Logger.getLogger(TaskIO.class);
 
     static class LocalDateTimeAdapter extends TypeAdapter<LocalDateTime> {
         @Override
@@ -58,7 +58,7 @@ public class TaskIO {
                 }
             }
         } catch (IOException e) {
-            log.error("File not existent on line 41");
+            LOG.error("File not existent on line 41");
         }
     }
 
@@ -76,13 +76,13 @@ public class TaskIO {
                 String title = String.valueOf(cTitle);
 
                 boolean isActive = dis.readBoolean();
-                int time_interval_repeat = dis.readInt();
-                if (time_interval_repeat > 0) {
+                int interval = dis.readInt();
+                if (interval > 0) {
                     long startMSec = dis.readLong();
                     long endMSec = dis.readLong();
-                    LocalDateTime time_start = numberToDate(startMSec);
-                    LocalDateTime time_end = numberToDate(endMSec);
-                    task = new Task(title, time_start, time_end, time_interval_repeat);
+                    LocalDateTime timeStart = numberToDate(startMSec);
+                    LocalDateTime timeEnd = numberToDate(endMSec);
+                    task = new Task(title, timeStart, timeEnd, interval);
                 } else {
                     long timeMSec = dis.readLong();
                     LocalDateTime time = numberToDate(timeMSec);
@@ -93,9 +93,9 @@ public class TaskIO {
                 tasks.add(task);
             }
         } catch (EOFException e) {
-            log.info("File was empty on line 65");
+            LOG.info("File was empty on line 65");
         } catch (IOException e) {
-            log.error("File nonexistent on line 65");
+            LOG.error("File nonexistent on line 65");
         }
     }
 
@@ -103,7 +103,7 @@ public class TaskIO {
         try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file))) {
             write(tasks, bos);
         } catch (IOException e) {
-            log.error("File not existent on line 102");
+            LOG.error("File not existent on line 102");
         }
     }
 
@@ -111,7 +111,7 @@ public class TaskIO {
         try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file))) {
             read(tasks, bis);
         } catch (IOException e) {
-            log.error("File not existent on line 110");
+            LOG.error("File not existent on line 110");
         }
     }
 
@@ -123,7 +123,7 @@ public class TaskIO {
             out.write(gson.toJson(tasks.getStream().toArray()));
             out.flush();
         } catch (IOException e) {
-            log.error(e.getMessage());
+            LOG.error(e.getMessage());
         }
     }
 
@@ -144,7 +144,7 @@ public class TaskIO {
                 tasks.add(task);
             }
         } catch (IOException e) {
-            log.error(e.getMessage());
+            LOG.error(e.getMessage());
         }
     }
 
@@ -152,7 +152,7 @@ public class TaskIO {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
             write(tasks, bw);
         } catch (IOException e) {
-            log.error("File not existent on line 151");
+            LOG.error("File not existent on line 151");
         }
     }
 
@@ -160,7 +160,7 @@ public class TaskIO {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             read(tasks, br);
         } catch (IOException e) {
-            log.error("File not existent on line 159");
+            LOG.error("File not existent on line 159");
         }
     }
 

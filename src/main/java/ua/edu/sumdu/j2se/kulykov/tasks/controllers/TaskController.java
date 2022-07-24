@@ -30,19 +30,19 @@ public class TaskController extends Controller {
     private void addTask() {
         String title;
         LocalDateTime time;
-        LocalDateTime time_start;
-        LocalDateTime time_end;
-        int time_interval_repeat;
+        LocalDateTime timeStart;
+        LocalDateTime timeEnd;
+        int interval;
         boolean isRepeated;
         title = editingView.getTitleInput(false);
         isRepeated = editingView.getIsRepeatedInput();
 
         if (isRepeated) {
-            time_start = editingView.getDateTimeInput(" start", false);
-            time_end = editingView.getDateTimeInput(" end", false);
-            time_interval_repeat = editingView.getIntervalInput(false);
+            timeStart = editingView.getDateTimeInput(" start", false);
+            timeEnd = editingView.getDateTimeInput(" end", false);
+            interval = editingView.getIntervalInput(false);
 
-            taskList.add(new Task(title, time_start, time_end, time_interval_repeat));
+            taskList.add(new Task(title, timeStart, timeEnd, interval));
         }
         else {
             time = editingView.getDateTimeInput("", false);
