@@ -4,14 +4,12 @@ import org.apache.log4j.Logger;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
-import java.util.Scanner;
 
 /**
  * Class for showing task list in selected format using TaskListController.
  */
 public class ShowTasksView extends View {
     private static final Logger LOG = Logger.getLogger(ShowTasksView.class);
-    private final Scanner in = new Scanner(System.in);
 
     /**
      * Method gets the date input.
@@ -19,19 +17,18 @@ public class ShowTasksView extends View {
      * @return LocalDateTime.
      */
     public LocalDateTime getDateInput(String startEnd) {
-        Scanner in = new Scanner(System.in);
         LocalDateTime dateTime;
         String input;
         message("Enter" + startEnd + " date in format yyyy-mm-dd: ");
-        input = in.nextLine();
+        input = SCANNER.nextLine();
         while(true) {
             try {
                 dateTime = LocalDateTime.parse(input + "T00:00:00");
                 break;
             } catch (DateTimeParseException e) {
-                message(e.getMessage() + '\n');
+                messageln(e.getMessage());
                 message("Enter" + startEnd + " date in format yyyy-mm-dd: ");
-                input = in.nextLine();
+                input = SCANNER.nextLine();
             }
         }
 
@@ -43,16 +40,16 @@ public class ShowTasksView extends View {
      */
     public int menu() {
         header();
-        message("1. Show all tasks\n");
-        message("2. Show calendar of tasks\n");
-        message("3. Show incoming tasks\n");
-        message("4. Clear task list\n");
-        message("5. Task editor\n");
-        message("6. Task writer\n");
-        message("7. Exit\n");
+        messageln("1. Show all tasks");
+        messageln("2. Show calendar of tasks");
+        messageln("3. Show incoming tasks");
+        messageln("4. Clear task list");
+        messageln("5. Task editor");
+        messageln("6. Task writer");
+        messageln("7. Exit");
         message("Type your choice: ");
         String choice;
-        choice = in.nextLine();
+        choice = SCANNER.nextLine();
         while (true) {
             int tmp = 0;
             try {
@@ -62,20 +59,23 @@ public class ShowTasksView extends View {
                 return tmp;
             } catch (NumberFormatException e) {
                 LOG.info("User entered impossible to parse to int input (" + choice + ")");
-                message("Invalid input\n");
+                messageln("Invalid input");
                 message("Type your choice: ");
-                choice = in.nextLine();
+                choice = SCANNER.nextLine();
             } catch (IllegalArgumentException e) {
                 LOG.info("User entered nonexistent point (" + tmp + ")");
-                message(e.getMessage() + '\n');
+                messageln(e.getMessage());
                 message("Type your choice: ");
-                choice = in.nextLine();
+                choice = SCANNER.nextLine();
+            } finally {
+                if (tmp == 7)
+                    SCANNER.close();
             }
         }
     }
 
     @Override
     protected void header() {
-        message("\n* * * * * Show tasks * * * * *\n");
+        messageln("\n* * * * * Show tasks * * * * *");
     }
 }

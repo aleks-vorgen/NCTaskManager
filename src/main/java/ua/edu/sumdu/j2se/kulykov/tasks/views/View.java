@@ -6,6 +6,8 @@ import java.util.Scanner;
  * Abstract view.
  */
 public abstract class View {
+
+    protected static final Scanner SCANNER = new Scanner(System.in);
     /**
      * Abstract method for showing views headers.
      */
@@ -20,18 +22,25 @@ public abstract class View {
     }
 
     /**
+     * Method prints message with new line.
+     * @param msg msg to print.
+     */
+    public void messageln(String msg) {
+        System.out.println(msg);
+    }
+
+    /**
      * Method gets yes/no input.
      * @return 'yes' or 'no' string.
      */
     public boolean getYesNoInput() {
-        Scanner in = new Scanner(System.in);
         String input;
         message("Type 'yes' or 'no': ");
-        input = in.nextLine();
+        input = SCANNER.nextLine();
         while (!"yes".equals(input) && !"no".equals(input)) {
-            message("Invalid input\n");
+            messageln("Invalid input");
             message("Type 'yes' or 'no': ");
-            input = in.nextLine();
+            input = SCANNER.nextLine();
         }
         return "yes".equals(input);
     }

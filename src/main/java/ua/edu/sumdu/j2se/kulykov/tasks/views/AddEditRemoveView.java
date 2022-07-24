@@ -4,14 +4,12 @@ import org.apache.log4j.Logger;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
-import java.util.Scanner;
 
 /**
  * Class for adding, editing or removing tasks in the task list using TaskController.
  */
 public class AddEditRemoveView extends View {
     private static final Logger LOG = Logger.getLogger(AddEditRemoveView.class);
-    private final Scanner in = new Scanner(System.in);
 
     /**
      * Method gets the task title input.
@@ -21,7 +19,7 @@ public class AddEditRemoveView extends View {
     public String getTitleInput(boolean editing) {
         String input;
         message("Enter title: ");
-        input = in.nextLine();
+        input = SCANNER.nextLine();
         if (editing && "".equals(input.trim()))
             return null;
 
@@ -33,7 +31,7 @@ public class AddEditRemoveView extends View {
      * @return boolean 'yes' or 'no'.
      */
     public boolean getIsRepeatedInput() {
-        message("Is your task will be repetitive?\n");
+        messageln("Is your task will be repetitive?");
         return getYesNoInput();
     }
 
@@ -44,11 +42,10 @@ public class AddEditRemoveView extends View {
      * @return LocalDateTime.
      */
     public LocalDateTime getDateTimeInput(String startEnd, boolean editing) {
-        Scanner in = new Scanner(System.in);
         LocalDateTime dateTime;
         String input;
         message("Enter" + startEnd + " date in format yyyy-mm-dd: ");
-        input = in.nextLine();
+        input = SCANNER.nextLine();
         if (editing && "".equals(input.trim()))
             return null;
 
@@ -57,14 +54,14 @@ public class AddEditRemoveView extends View {
                 dateTime = LocalDateTime.parse(input + "T00:00:00");
                 break;
             } catch (DateTimeParseException e) {
-                message(e.getMessage() + '\n');
+                messageln(e.getMessage());
                 message("Enter" + startEnd + " start date in format yyyy-mm-dd: ");
-                input = in.nextLine();
+                input = SCANNER.nextLine();
             }
         }
 
         message("Enter" + startEnd + " time in format hh:mm : ");
-        input = in.nextLine();
+        input = SCANNER.nextLine();
         while(true) {
             try {
                 LocalDateTime tmpTime = LocalDateTime.parse("2000-01-01T" + input + ":00");
@@ -72,9 +69,9 @@ public class AddEditRemoveView extends View {
                 dateTime = dateTime.plusMinutes(tmpTime.getMinute());
                 break;
             } catch (DateTimeParseException e) {
-                message(e.getMessage() + '\n');
+                messageln(e.getMessage());
                 message("Enter" + startEnd + " time in format hh:mm : ");
-                input = in.nextLine();
+                input = SCANNER.nextLine();
             }
         }
         return dateTime;
@@ -86,10 +83,9 @@ public class AddEditRemoveView extends View {
      * @return int interval in seconds.
      */
     public int getIntervalInput(boolean editing) {
-        Scanner in = new Scanner(System.in);
         String input;
         message("Enter interval in seconds: ");
-        input = in.nextLine();
+        input = SCANNER.nextLine();
         if (editing && "".equals(input.trim()))
             return -1;
 
@@ -97,9 +93,9 @@ public class AddEditRemoveView extends View {
             try {
                 return Integer.parseInt(input);
             } catch (NumberFormatException e) {
-                message("This is not a number\n");
+                messageln("This is not a number");
                 message("Enter an interval in seconds: ");
-                input = in.nextLine();
+                input = SCANNER.nextLine();
             }
         }
     }
@@ -113,15 +109,15 @@ public class AddEditRemoveView extends View {
         int id;
         String input;
         message("Enter an id of the task you want to " + editRemove + ": ");
-        input = in.nextLine();
+        input = SCANNER.nextLine();
         while (true) {
             try {
                 id = Integer.parseInt(input) - 1;
                 break;
             } catch (NumberFormatException e) {
-                message("This is not a number\n");
+                messageln("This is not a number");
                 message("Enter an id of the task you want to " + editRemove + ": ");
-                input = in.nextLine();
+                input = SCANNER.nextLine();
             }
         }
         return id;
@@ -132,13 +128,13 @@ public class AddEditRemoveView extends View {
      */
     public int menu() {
         header();
-        message("1. Create task\n");
-        message("2. Edit task\n");
-        message("3. Remove task\n");
-        message("4. Back to main menu\n");
+        messageln("1. Create task");
+        messageln("2. Edit task");
+        messageln("3. Remove task");
+        messageln("4. Back to main menu");
         message("Type your choice: ");
         String choice;
-        choice = in.nextLine();
+        choice = SCANNER.nextLine();
         while (true) {
             int tmp = 0;
             try {
@@ -148,21 +144,21 @@ public class AddEditRemoveView extends View {
                 return tmp;
             } catch (NumberFormatException e) {
                 LOG.info("User entered impossible to parse to int input (" + choice + ")");
-                message("Invalid input\n");
+                messageln("Invalid input");
                 message("Type your choice: ");
-                choice = in.nextLine();
+                choice = SCANNER.nextLine();
             } catch (IllegalArgumentException e) {
                 LOG.info("User entered nonexistent point (" + tmp + ")");
-                message(e.getMessage() + '\n');
+                messageln(e.getMessage());
                 message("Type your choice: ");
-                choice = in.nextLine();
+                choice = SCANNER.nextLine();
             }
         }
     }
 
     @Override
     protected void header() {
-        String header = "\n* * * * * Task editor * * * * *\n";
-        message(header);
+        String header = "\n* * * * * Task editor * * * * *";
+        messageln(header);
     }
 }

@@ -2,14 +2,11 @@ package ua.edu.sumdu.j2se.kulykov.tasks.views;
 
 import org.apache.log4j.Logger;
 
-import java.util.Scanner;
-
 /**
  * View class for writing or reading json files.
  */
 public class IOView extends View {
     private static final Logger LOG = Logger.getLogger(IOView.class);
-    private final Scanner in = new Scanner(System.in);
 
     /**
      * Method gets the name of file input.
@@ -18,20 +15,20 @@ public class IOView extends View {
     public String getFileNameInput(){
         String input;
         message("Enter the name of the file: ");
-        input = in.nextLine().trim();
+        input = SCANNER.nextLine().trim();
         while (true) {
             try {
                 if ("".equals(input))
-                    throw new IllegalArgumentException("Field was empty\n");
+                    throw new IllegalArgumentException("Field was empty");
                 for (char c : input.toCharArray()) {
                     if (c == ' ')
-                        throw new IllegalArgumentException("The name of the file can`t contains spaces\n");
+                        throw new IllegalArgumentException("The name of the file can`t contains spaces");
                 }
                 break;
             } catch (IllegalArgumentException e) {
-                message(e.getMessage());
+                messageln(e.getMessage());
                 message("Enter the name of the file: ");
-                input = in.nextLine().trim();
+                input = SCANNER.nextLine().trim();
             }
         }
         return input;
@@ -42,12 +39,12 @@ public class IOView extends View {
      */
     public int menu() {
         header();
-        message("1. Save task list to text file\n");
-        message("2. Upload task list from text file\n");
-        message("3. Back to main menu\n");
+        messageln("1. Save task list to text file");
+        messageln("2. Upload task list from text file");
+        messageln("3. Back to main menu");
         message("Type your choice: ");
         String choice;
-        choice = in.nextLine();
+        choice = SCANNER.nextLine();
         while (true) {
             int tmp = 0;
             try {
@@ -57,20 +54,20 @@ public class IOView extends View {
                 return tmp;
             } catch (NumberFormatException e) {
                 LOG.info("User entered impossible to parse to int input (" + choice + ")");
-                message("Invalid input\n");
+                messageln("Invalid input");
                 message("Type your choice: ");
-                choice = in.nextLine();
+                choice = SCANNER.nextLine();
             } catch (IllegalArgumentException e) {
                 LOG.info("User entered nonexistent point (" + tmp + ")");
-                message(e.getMessage() + '\n');
+                messageln(e.getMessage());
                 message("Type your choice: ");
-                choice = in.nextLine();
+                choice = SCANNER.nextLine();
             }
         }
     }
 
     @Override
     protected void header() {
-        message("\n* * * * * Task writer * * * * *\n");
+        messageln("\n* * * * * Task writer * * * * *");
     }
 }
