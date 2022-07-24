@@ -6,10 +6,10 @@ import ua.edu.sumdu.j2se.kulykov.tasks.controllers.TaskListController;
 import ua.edu.sumdu.j2se.kulykov.tasks.models.ArrayTaskList;
 
 public class Main {
-	private static final Logger log = Logger.getLogger("ProgramStartsAppender");
+	private static final Logger LOG = Logger.getLogger("ProgramStartsAppender");
 
 	public static void main(String[] args) {
-		log.info("Program was started");
+		LOG.info("Program was started");
 
 		ArrayTaskList taskList = new ArrayTaskList();
 		new IOController(taskList).readBin();

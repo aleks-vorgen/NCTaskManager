@@ -1,5 +1,7 @@
 package ua.edu.sumdu.j2se.kulykov.tasks.views;
 
+import org.apache.log4j.Logger;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
@@ -8,6 +10,7 @@ import java.util.Scanner;
  * Class for adding, editing or removing tasks in the task list using TaskController.
  */
 public class AddEditRemoveView extends View {
+    private static final Logger LOG = Logger.getLogger(AddEditRemoveView.class);
     private final Scanner in = new Scanner(System.in);
 
     /**
@@ -128,25 +131,31 @@ public class AddEditRemoveView extends View {
      * Method shows the menu for managing tasks.
      */
     public int menu() {
+        header();
+        message("1. Create task\n");
+        message("2. Edit task\n");
+        message("3. Remove task\n");
+        message("4. Back to main menu\n");
+        message("Type your choice: ");
+        String choice;
+        choice = in.nextLine();
         while (true) {
-            header();
-            message("1. Create task\n");
-            message("2. Edit task\n");
-            message("3. Remove task\n");
-            message("4. Back to main menu\n");
-            message("Type your choice: ");
-            String choice = in.nextLine();
-            switch (choice) {
-                case "1":
-                    return 1;
-                case "2":
-                    return 2;
-                case "3":
-                    return 3;
-                case "4":
-                    return 4;
-                default:
-                    message("This option does not exist\n\n");
+            int tmp = 0;
+            try {
+                tmp = Integer.parseInt(choice);
+                if (tmp < 1 || tmp > 4)
+                    throw new IllegalArgumentException("This option does not exists");
+                return tmp;
+            } catch (NumberFormatException e) {
+                LOG.info("User entered impossible to parse to int input (" + choice + ")");
+                message("Invalid input\n");
+                message("Type your choice: ");
+                choice = in.nextLine();
+            } catch (IllegalArgumentException e) {
+                LOG.info("User entered nonexistent point (" + tmp + ")");
+                message(e.getMessage() + '\n');
+                message("Type your choice: ");
+                choice = in.nextLine();
             }
         }
     }

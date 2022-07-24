@@ -149,32 +149,49 @@ public class TaskListController extends Controller {
         int key;
         key = stv.menu();
         switch (key) {
-            case 1:
-                getTaskList();
-                showMenu();
-                break;
-            case 2:
-                getCalendar();
-                showMenu();
-                break;
-            case 3:
-                getIncoming();
-                showMenu();
-                break;
-            case 4:
-                clear();
-                showMenu();
-                break;
-            case 5:
-                new TaskController(taskList, new AddEditRemoveView()).showMenu();
-                break;
-            case 6:
-                new IOController(taskList, new IOView()).showMenu();
-                break;
-            case 7:
-                new IOController(taskList).writeBin();
-                log.info("Program was finished with exit code 0");
-                break;
+            case 1 -> showTaskList();
+            case 2 -> calendar();
+            case 3 -> incoming();
+            case 4 -> clearList();
+            case 5 -> toTaskController();
+            case 6 -> toIOController();
+            case 7 -> finish();
         }
+    }
+
+    private void showTaskList() {
+        getTaskList();
+        showMenu();
+    }
+
+    private void calendar() {
+        getCalendar();
+        showMenu();
+    }
+
+    private void incoming() {
+        getIncoming();
+        showMenu();
+    }
+
+    private void clearList() {
+        clear();
+        showMenu();
+    }
+
+    private void toTaskController() {
+        new TaskController(taskList, new AddEditRemoveView())
+                .showMenu();
+    }
+
+    private void toIOController() {
+        new IOController(taskList, new IOView())
+                .showMenu();
+    }
+
+    private void finish() {
+        new IOController(taskList)
+                .writeBin();
+        log.info("Program was finished with exit code 0");
     }
 }

@@ -130,17 +130,24 @@ public class IOController extends Controller {
         int key;
         key = ioView.menu();
         switch (key) {
-            case 1:
-                writeTxt();
-                showMenu();
-                break;
-            case 2:
-                readTxt();
-                showMenu();
-                break;
-            case 3:
-                new TaskListController(taskList, new ShowTasksView()).showMenu();
-                break;
+            case 1 -> write();
+            case 2 -> read();
+            case 3 -> toTaskListController();
         }
+    }
+
+    private void write() {
+        writeTxt();
+        showMenu();
+    }
+
+    private void read() {
+        readTxt();
+        showMenu();
+    }
+
+    private void toTaskListController() {
+        new TaskListController(taskList, new ShowTasksView())
+                .showMenu();
     }
 }

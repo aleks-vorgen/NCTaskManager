@@ -49,7 +49,7 @@ public class TaskController extends Controller {
 
             taskList.add(new Task(title, time));
         }
-        editingView.message("Task \"" + title + "\" was added successfully");
+        editingView.message("Task \"" + title + "\" was added successfully\n");
     }
 
     /**
@@ -152,21 +152,30 @@ public class TaskController extends Controller {
         int key;
         key = editingView.menu();
         switch (key) {
-            case 1:
-                addTask();
-                showMenu();
-                break;
-            case 2:
-                editTask();
-                showMenu();
-                break;
-            case 3:
-                removeTask();
-                showMenu();
-                break;
-            case 4:
-                new TaskListController(taskList, new ShowTasksView()).showMenu();
-                break;
+            case 1 -> add();
+            case 2 -> edit();
+            case 3 -> remove();
+            case 4 -> toTaskListController();
         }
+    }
+
+    private void add() {
+        addTask();
+        showMenu();
+    }
+
+    private void edit() {
+        editTask();
+        showMenu();
+    }
+
+    private void remove() {
+        removeTask();
+        showMenu();
+    }
+
+    private void toTaskListController() {
+        new TaskListController(taskList, new ShowTasksView())
+                .showMenu();
     }
 }

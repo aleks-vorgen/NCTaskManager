@@ -13,6 +13,9 @@ public class Notificator extends Thread {
     private final ShowTasksView stv;
     private final DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm");
     private static final Logger log = Logger.getLogger(Notificator.class);
+    private final static int DELAY = 30000;
+    private static final int MIN_5 = 5;
+    private static final int MIN_1 = 1;
 
     public Notificator(ArrayTaskList taskList, ShowTasksView stv) {
         this.taskList = taskList;
@@ -27,13 +30,13 @@ public class Notificator extends Thread {
             try {
                 if (taskList != null) {
                     StringBuilder str = new StringBuilder();
-                    LocalDateTime ldt = LocalDateTime.now().plusMinutes(5);
-                    ArrayTaskList incomingTaskList = (ArrayTaskList) Tasks.incoming(taskList, ldt, ldt.plusMinutes(1));
+                    LocalDateTime ldt = LocalDateTime.now().plusMinutes(MIN_5);
+                    ArrayTaskList incomingTaskList = (ArrayTaskList) Tasks.incoming(taskList, ldt, ldt.plusMinutes(MIN_1));
                     int counter = 1;
 
                     for (Task task : incomingTaskList) {
                         str.append('\n').append(counter).append(". \"").append(task.getTitle()).append("\" starts at ")
-                                .append(format.format(ldt.plusMinutes(1)));
+                                .append(format.format(ldt.plusMinutes(MIN_1)));
                         counter++;
                     }
                     str.append('\n');
@@ -43,7 +46,7 @@ public class Notificator extends Thread {
 
                     old = str.toString();
                 }
-                sleep(30000);
+                sleep(DELAY);
             } catch (InterruptedException e) {
                 log.warn("Thread was interrupted");
             }

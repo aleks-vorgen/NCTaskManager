@@ -1,11 +1,14 @@
 package ua.edu.sumdu.j2se.kulykov.tasks.views;
 
+import org.apache.log4j.Logger;
+
 import java.util.Scanner;
 
 /**
  * View class for writing or reading json files.
  */
 public class IOView extends View {
+    private static final Logger LOG = Logger.getLogger(IOView.class);
     private final Scanner in = new Scanner(System.in);
 
     /**
@@ -38,22 +41,30 @@ public class IOView extends View {
      * Method shows the menu for managing files.
      */
     public int menu() {
+        header();
+        message("1. Save task list to text file\n");
+        message("2. Upload task list from text file\n");
+        message("3. Back to main menu\n");
+        message("Type your choice: ");
+        String choice;
+        choice = in.nextLine();
         while (true) {
-            header();
-            message("1. Save task list to text file\n");
-            message("2. Upload task list from text file\n");
-            message("3. Back to main menu\n");
-            message("Type your choice: ");
-            String choice = in.nextLine();
-            switch (choice) {
-                case "1":
-                    return 1;
-                case "2":
-                    return 2;
-                case "3":
-                    return 3;
-                default:
-                    message("This option does not exist\n\n");
+            int tmp = 0;
+            try {
+                tmp = Integer.parseInt(choice);
+                if (tmp < 1 || tmp > 3)
+                    throw new IllegalArgumentException("This option does not exists");
+                return tmp;
+            } catch (NumberFormatException e) {
+                LOG.info("User entered impossible to parse to int input (" + choice + ")");
+                message("Invalid input\n");
+                message("Type your choice: ");
+                choice = in.nextLine();
+            } catch (IllegalArgumentException e) {
+                LOG.info("User entered nonexistent point (" + tmp + ")");
+                message(e.getMessage() + '\n');
+                message("Type your choice: ");
+                choice = in.nextLine();
             }
         }
     }
