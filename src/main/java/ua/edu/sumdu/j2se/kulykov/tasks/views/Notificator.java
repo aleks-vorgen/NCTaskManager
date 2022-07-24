@@ -25,26 +25,25 @@ public class Notificator extends Thread {
         String old = null;
         while (true) {
             try {
-                StringBuilder str = new StringBuilder();
-                LocalDateTime ldt = LocalDateTime.now().plusMinutes(5);
-                ArrayTaskList incomingTaskList = (ArrayTaskList) Tasks.incoming(taskList, ldt, ldt.plusMinutes(1));
-                int counter = 1;
+                if (taskList != null) {
+                    StringBuilder str = new StringBuilder();
+                    LocalDateTime ldt = LocalDateTime.now().plusMinutes(5);
+                    ArrayTaskList incomingTaskList = (ArrayTaskList) Tasks.incoming(taskList, ldt, ldt.plusMinutes(1));
+                    int counter = 1;
 
-                for (Task task : incomingTaskList) {
-                    str.append('\n').append(counter).append(". \"").append(task.getTitle()).append("\" starts at ")
-                            .append(format.format(ldt.plusMinutes(1)));
-                    counter++;
+                    for (Task task : incomingTaskList) {
+                        str.append('\n').append(counter).append(". \"").append(task.getTitle()).append("\" starts at ")
+                                .append(format.format(ldt.plusMinutes(1)));
+                        counter++;
+                    }
+                    str.append('\n');
+
+                    if (!"\n".contentEquals(str) && !str.toString().equals(old))
+                        stv.message(str.toString());
+
+                    old = str.toString();
                 }
-                str.append('\n');
-
-                if (!"\n".contentEquals(str) && !str.toString().equals(old))
-                    stv.message(str.toString());
-
-                old = str.toString();
-
                 sleep(30000);
-            } catch (NullPointerException e) {
-                log.warn("Task list was empty");
             } catch (InterruptedException e) {
                 log.warn("Thread was interrupted");
             }
