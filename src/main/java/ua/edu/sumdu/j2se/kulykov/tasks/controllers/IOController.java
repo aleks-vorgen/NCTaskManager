@@ -133,6 +133,7 @@ public class IOController extends Controller {
             case 1 -> write();
             case 2 -> read();
             case 3 -> toTaskListController();
+            default -> nonexistentPoint(ioView);
         }
     }
 
