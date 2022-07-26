@@ -1,15 +1,13 @@
 package ua.edu.sumdu.j2se.kulykov.tasks.views;
 
-import org.apache.log4j.Logger;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.Scanner;
 
 /**
  * Class for showing task list in selected format using TaskListController.
  */
 public class ShowTasksView extends View {
-    private static final Logger LOG = Logger.getLogger(ShowTasksView.class);
 
     /**
      * Method gets the date input.
@@ -17,10 +15,11 @@ public class ShowTasksView extends View {
      * @return LocalDateTime.
      */
     public LocalDateTime getDateInput(String startEnd) {
+        Scanner sc = new Scanner(System.in);
         LocalDateTime dateTime;
         String input;
         message("Enter" + startEnd + " date in format yyyy-mm-dd: ");
-        input = SCANNER.nextLine();
+        input = sc.nextLine();
         while(true) {
             try {
                 dateTime = LocalDateTime.parse(input + "T00:00:00");
@@ -28,7 +27,7 @@ public class ShowTasksView extends View {
             } catch (DateTimeParseException e) {
                 messageln(e.getMessage());
                 message("Enter" + startEnd + " date in format yyyy-mm-dd: ");
-                input = SCANNER.nextLine();
+                input = sc.nextLine();
             }
         }
 
@@ -47,16 +46,8 @@ public class ShowTasksView extends View {
         messageln("5. Task editor");
         messageln("6. Task writer");
         messageln("7. Exit");
-        message("Type your choice: ");
-        int choice;
-        while (!SCANNER.hasNextInt()) {
-            messageln("This is not a number");
-            message("Type your choice: ");
-            SCANNER.next();
-        }
-        choice = SCANNER.nextInt();
 
-        return choice;
+        return getChoiceInput();
     }
 
     @Override

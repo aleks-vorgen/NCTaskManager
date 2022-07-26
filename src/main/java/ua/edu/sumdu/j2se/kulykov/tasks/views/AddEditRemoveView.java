@@ -1,15 +1,13 @@
 package ua.edu.sumdu.j2se.kulykov.tasks.views;
 
-import org.apache.log4j.Logger;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.Scanner;
 
 /**
  * Class for adding, editing or removing tasks in the task list using TaskController.
  */
 public class AddEditRemoveView extends View {
-    private static final Logger LOG = Logger.getLogger(AddEditRemoveView.class);
 
     /**
      * Method gets the task title input.
@@ -17,13 +15,24 @@ public class AddEditRemoveView extends View {
      * @return string task title.
      */
     public String getTitleInput(boolean editing) {
-
+        Scanner sc = new Scanner(System.in);
         String input;
         message("Enter title: ");
-        input = SCANNER.nextLine();
-        if (editing && "".equals(input.trim()))
-            return null;
-
+        if (editing) {
+            input = sc.nextLine();
+            if ("".equals(input.trim()))
+                return null;
+        }
+        else {
+            do {
+                while (!sc.hasNextLine()) {
+                    messageln("Invalid input");
+                    message("Enter title: ");
+                    sc.next();
+                }
+                input = sc.nextLine();
+            } while ("".equals(input));
+        }
         return input;
     }
 
@@ -43,10 +52,11 @@ public class AddEditRemoveView extends View {
      * @return LocalDateTime.
      */
     public LocalDateTime getDateTimeInput(String startEnd, boolean editing) {
+        Scanner sc = new Scanner(System.in);
         LocalDateTime dateTime;
         String input;
         message("Enter" + startEnd + " date in format yyyy-mm-dd: ");
-        input = SCANNER.nextLine();
+        input = sc.nextLine();
         if (editing && "".equals(input.trim()))
             return null;
 
@@ -57,12 +67,12 @@ public class AddEditRemoveView extends View {
             } catch (DateTimeParseException e) {
                 messageln(e.getMessage());
                 message("Enter" + startEnd + " start date in format yyyy-mm-dd: ");
-                input = SCANNER.nextLine();
+                input = sc.nextLine();
             }
         }
 
         message("Enter" + startEnd + " time in format hh:mm : ");
-        input = SCANNER.nextLine();
+        input = sc.nextLine();
         while(true) {
             try {
                 LocalDateTime tmpTime = LocalDateTime.parse("2000-01-01T" + input + ":00");
@@ -72,7 +82,7 @@ public class AddEditRemoveView extends View {
             } catch (DateTimeParseException e) {
                 messageln(e.getMessage());
                 message("Enter" + startEnd + " time in format hh:mm : ");
-                input = SCANNER.nextLine();
+                input = sc.nextLine();
             }
         }
         return dateTime;
@@ -84,21 +94,24 @@ public class AddEditRemoveView extends View {
      * @return int interval in seconds.
      */
     public int getIntervalInput(boolean editing) {
-        String input;
+        Scanner sc = new Scanner(System.in);
+        int input;
         message("Enter interval in seconds: ");
-        input = SCANNER.nextLine();
-        if (editing && "".equals(input.trim()))
-            return -1;
-
-        while (true) {
-            try {
-                return Integer.parseInt(input);
-            } catch (NumberFormatException e) {
-                messageln("This is not a number");
-                message("Enter an interval in seconds: ");
-                input = SCANNER.nextLine();
-            }
+        if (editing) {
+            input = sc.nextInt();
+            if ("".equals(Integer.toString(input).trim()))
+                return -1;
         }
+        else {
+            while (!sc.hasNextInt()) {
+                messageln("This is not a number");
+                message("Enter interval in seconds: ");
+                sc.next();
+            }
+            input = sc.nextInt();
+        }
+
+        return input;
     }
 
     /**
@@ -107,14 +120,16 @@ public class AddEditRemoveView extends View {
      * @return int task id in the task list.
      */
     public int getIdInput(String editRemove) {
+        Scanner sc = new Scanner(System.in);
         int id;
         message("Enter an id of the task you want to " + editRemove + ": ");
-        while (!SCANNER.hasNextInt()) {
+        while (!sc.hasNextInt()) {
             messageln("This is not a number");
             message("Enter an id of the task you want to " + editRemove + ": ");
-            SCANNER.next();
+            sc.next();
         }
-        id = SCANNER.nextInt();
+        id = sc.nextInt();
+
         return id - 1;
     }
 
@@ -127,16 +142,8 @@ public class AddEditRemoveView extends View {
         messageln("2. Edit task");
         messageln("3. Remove task");
         messageln("4. Back to main menu");
-        message("Type your choice: ");
-        int choice;
-        while (!SCANNER.hasNextInt()) {
-            messageln("This is not a number");
-            message("Type your choice: ");
-            SCANNER.next();
-        }
-        choice = SCANNER.nextInt();
 
-        return choice;
+        return getChoiceInput();
     }
 
     @Override

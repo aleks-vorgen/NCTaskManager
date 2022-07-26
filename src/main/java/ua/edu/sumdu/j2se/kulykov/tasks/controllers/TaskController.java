@@ -76,6 +76,7 @@ public class TaskController extends Controller {
         if (!editingView.getYesNoInput())
             return;
 
+        editingView.messageln("*If you don't need to change the field, leave it blank");
         title = editingView.getTitleInput(true);
         if (title == null)
             title = task.getTitle();

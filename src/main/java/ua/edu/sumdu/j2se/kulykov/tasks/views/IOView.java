@@ -2,6 +2,8 @@ package ua.edu.sumdu.j2se.kulykov.tasks.views;
 
 import org.apache.log4j.Logger;
 
+import java.util.Scanner;
+
 /**
  * View class for writing or reading json files.
  */
@@ -13,9 +15,29 @@ public class IOView extends View {
      * @return string name of file.
      */
     public String getFileNameInput(){
+        Scanner sc = new Scanner(System.in);
         String input;
         message("Enter the name of the file: ");
-        input = SCANNER.nextLine().trim();
+        input = sc.nextLine().trim();
+        boolean valid = false;
+        while (!valid) {
+            while ("".equals(input)) {
+                messageln("Field was empty");
+                message("Enter the name of the file: ");
+                input = sc.nextLine().trim();
+            }
+            valid = true;
+            for (char c : input.toCharArray()) {
+                if (c == ' ') {
+                    valid = false;
+                    messageln("The name of the file can`t contains spaces");
+                    message("Enter the name of the file: ");
+                    input = sc.nextLine().trim();
+                    break;
+                }
+            }
+        }
+
         while (true) {
             try {
                 if ("".equals(input))
@@ -28,7 +50,7 @@ public class IOView extends View {
             } catch (IllegalArgumentException e) {
                 messageln(e.getMessage());
                 message("Enter the name of the file: ");
-                input = SCANNER.nextLine().trim();
+                input = sc.nextLine().trim();
             }
         }
         return input;
@@ -44,7 +66,8 @@ public class IOView extends View {
         messageln("3. Back to main menu");
         message("Type your choice: ");
         String choice;
-        choice = SCANNER.nextLine();
+        Scanner sc = new Scanner(System.in);
+        choice = sc.nextLine();
         while (true) {
             int tmp = 0;
             try {
@@ -56,12 +79,12 @@ public class IOView extends View {
                 LOG.info("User entered impossible to parse to int input (" + choice + ")");
                 messageln("Invalid input");
                 message("Type your choice: ");
-                choice = SCANNER.nextLine();
+                choice = sc.nextLine();
             } catch (IllegalArgumentException e) {
                 LOG.info("User entered nonexistent point (" + tmp + ")");
                 messageln(e.getMessage());
                 message("Type your choice: ");
-                choice = SCANNER.nextLine();
+                choice = sc.nextLine();
             }
         }
     }
