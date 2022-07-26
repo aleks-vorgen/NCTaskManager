@@ -48,30 +48,15 @@ public class ShowTasksView extends View {
         messageln("6. Task writer");
         messageln("7. Exit");
         message("Type your choice: ");
-        String choice;
-        choice = SCANNER.nextLine();
-        while (true) {
-            int tmp = 0;
-            try {
-                tmp = Integer.parseInt(choice);
-                if (tmp < 1 || tmp > 7)
-                    throw new IllegalArgumentException("This option does not exists");
-                return tmp;
-            } catch (NumberFormatException e) {
-                LOG.info("User entered impossible to parse to int input (" + choice + ")");
-                messageln("Invalid input");
-                message("Type your choice: ");
-                choice = SCANNER.nextLine();
-            } catch (IllegalArgumentException e) {
-                LOG.info("User entered nonexistent point (" + tmp + ")");
-                messageln(e.getMessage());
-                message("Type your choice: ");
-                choice = SCANNER.nextLine();
-            } finally {
-                if (tmp == 7)
-                    SCANNER.close();
-            }
+        int choice;
+        while (!SCANNER.hasNextInt()) {
+            messageln("This is not a number");
+            message("Type your choice: ");
+            SCANNER.next();
         }
+        choice = SCANNER.nextInt();
+
+        return choice;
     }
 
     @Override

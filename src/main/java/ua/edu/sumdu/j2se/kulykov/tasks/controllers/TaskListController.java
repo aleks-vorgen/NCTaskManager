@@ -145,6 +145,7 @@ public class TaskListController extends Controller {
         str.append("     Is active: ").append(task.isActive() ? "active" : "inactive").append("\n\n");
     }
 
+    @Override
     public void showMenu() {
         int key;
         key = stv.menu();
@@ -156,6 +157,7 @@ public class TaskListController extends Controller {
             case 5 -> toTaskController();
             case 6 -> toIOController();
             case 7 -> finish();
+            default -> nonexistentPoint(stv);
         }
     }
 

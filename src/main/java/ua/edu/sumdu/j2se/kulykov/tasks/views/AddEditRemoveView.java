@@ -17,6 +17,7 @@ public class AddEditRemoveView extends View {
      * @return string task title.
      */
     public String getTitleInput(boolean editing) {
+
         String input;
         message("Enter title: ");
         input = SCANNER.nextLine();
@@ -107,20 +108,14 @@ public class AddEditRemoveView extends View {
      */
     public int getIdInput(String editRemove) {
         int id;
-        String input;
         message("Enter an id of the task you want to " + editRemove + ": ");
-        input = SCANNER.nextLine();
-        while (true) {
-            try {
-                id = Integer.parseInt(input) - 1;
-                break;
-            } catch (NumberFormatException e) {
-                messageln("This is not a number");
-                message("Enter an id of the task you want to " + editRemove + ": ");
-                input = SCANNER.nextLine();
-            }
+        while (!SCANNER.hasNextInt()) {
+            messageln("This is not a number");
+            message("Enter an id of the task you want to " + editRemove + ": ");
+            SCANNER.next();
         }
-        return id;
+        id = SCANNER.nextInt();
+        return id - 1;
     }
 
     /**
@@ -133,27 +128,15 @@ public class AddEditRemoveView extends View {
         messageln("3. Remove task");
         messageln("4. Back to main menu");
         message("Type your choice: ");
-        String choice;
-        choice = SCANNER.nextLine();
-        while (true) {
-            int tmp = 0;
-            try {
-                tmp = Integer.parseInt(choice);
-                if (tmp < 1 || tmp > 4)
-                    throw new IllegalArgumentException("This option does not exists");
-                return tmp;
-            } catch (NumberFormatException e) {
-                LOG.info("User entered impossible to parse to int input (" + choice + ")");
-                messageln("Invalid input");
-                message("Type your choice: ");
-                choice = SCANNER.nextLine();
-            } catch (IllegalArgumentException e) {
-                LOG.info("User entered nonexistent point (" + tmp + ")");
-                messageln(e.getMessage());
-                message("Type your choice: ");
-                choice = SCANNER.nextLine();
-            }
+        int choice;
+        while (!SCANNER.hasNextInt()) {
+            messageln("This is not a number");
+            message("Type your choice: ");
+            SCANNER.next();
         }
+        choice = SCANNER.nextInt();
+
+        return choice;
     }
 
     @Override

@@ -67,6 +67,10 @@ public class TaskController extends Controller {
         int interval;
 
         task = taskFinder("edit");
+        if (task == null) {
+            editingView.messageln("Task list is empty");
+            return;
+        }
 
         editingView.message("Are you sure you want to edit \"" + task.getTitle() + "\" task?\n");
         if (!editingView.getYesNoInput())
@@ -123,8 +127,14 @@ public class TaskController extends Controller {
      * Method removes the task from the task list.
      */
     private void removeTask() {
+        editingView.message("\n* * * Task removing * * *\n");
         Task task;
         task = taskFinder("remove");
+        if (task == null) {
+            editingView.messageln("Task list is empty");
+            return;
+        }
+
         editingView.message("Are you sure you want to remove \"" + task.getTitle() + "\" task?\n");
         if (editingView.getYesNoInput()) {
             taskList.remove(task);
@@ -138,9 +148,12 @@ public class TaskController extends Controller {
      * @return found task.
      */
     private Task taskFinder(String editRemove) {
+        if (taskList.size() == 0)
+            return null;
+
         int id;
         id = editingView.getIdInput(editRemove);
-        while ( id < 0 || id > taskList.size()) {
+        while ( id < 0 || id > taskList.size() - 1) {
             editingView.message("Task with this id does not exists\n");
             id = editingView.getIdInput(editRemove);
         }
@@ -148,6 +161,7 @@ public class TaskController extends Controller {
         return taskList.getTask(id);
     }
 
+    @Override
     public void showMenu() {
         int key;
         key = editingView.menu();
@@ -156,6 +170,7 @@ public class TaskController extends Controller {
             case 2 -> edit();
             case 3 -> remove();
             case 4 -> toTaskListController();
+            default -> nonexistentPoint(editingView);
         }
     }
 
