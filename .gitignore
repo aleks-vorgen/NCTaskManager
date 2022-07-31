@@ -6,3 +6,5 @@
 /src/test/
 /res/
 /src/main/resources/javadoc/
+/dependency-reduced-pom.xml
+/NCTaskManager-1.0-jar-with-dependencies.jar
