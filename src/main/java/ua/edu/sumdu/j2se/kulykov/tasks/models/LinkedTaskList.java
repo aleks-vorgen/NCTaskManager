@@ -1,4 +1,4 @@
-package ua.edu.sumdu.j2se.kulykov.tasks;
+package ua.edu.sumdu.j2se.kulykov.tasks.models;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -108,7 +108,7 @@ public class LinkedTaskList extends AbstractTaskList implements Cloneable {
 
     @Override
     public Iterator<Task> iterator() {
-        return new Iterator<Task>() {
+        return new Iterator<>() {
             private Node current = first;
             private Node lastReturned;
             private int nextIndex;

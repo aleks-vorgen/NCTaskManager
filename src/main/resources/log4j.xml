@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
+
+    <appender name="fileAppender" class="org.apache.log4j.RollingFileAppender">
+        <param name="maxFileSize" value="2MB"/>
+        <param name="maxBackupIndex" value="3"/>
+        <param name="file" value="target/logfile.log"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1} - %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="FileAppender" class="org.apache.log4j.RollingFileAppender">
+        <param name="maxFileSize" value="2MB"/>
+        <param name="maxBackupIndex" value="3"/>
+        <param name="file" value="target/programStarts.log"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1} - %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="ProgramStartsAppender" class="org.apache.log4j.RollingFileAppender">
+        <param name="maxFileSize" value="1MB"/>
+        <param name="maxBackupIndex" value="1"/>
+        <param name="file" value="target/program_starts.log"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%d{yyyy-MM-dd HH:mm:ss} %-5p %m%n"/>
+        </layout>
+    </appender>
+
+    <category name="ua.edu.sumdu.j2se.kulykov.tasks">
+        <!--all, trace, debug, info, warn, error, fatal-->
+        <priority value="info"/>
+        <appender-ref ref="fileAppender"/>
+    </category>
+    <category name="ProgramStartsAppender">
+        <!--all, trace, debug, info, warn, error, fatal-->
+        <priority value="info"/>
+        <appender-ref ref="ProgramStartsAppender"/>
+    </category>
+
+</log4j:configuration>

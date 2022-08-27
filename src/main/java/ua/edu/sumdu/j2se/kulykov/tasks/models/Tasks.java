@@ -1,4 +1,4 @@
-package ua.edu.sumdu.j2se.kulykov.tasks;
+package ua.edu.sumdu.j2se.kulykov.tasks.models;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -26,6 +26,7 @@ public class Tasks {
                     .filter(task -> task.nextTimeAfter(start).isAfter(start))
                     .filter(task -> task.nextTimeAfter(start).isBefore(end)
                             || task.nextTimeAfter(start).equals(end)).forEach(res::add);
+
             return res;
         }
     }
@@ -47,6 +48,7 @@ public class Tasks {
                 current = task.nextTimeAfter(current);
             }
         }
+
         return sortedMap;
     }
 }

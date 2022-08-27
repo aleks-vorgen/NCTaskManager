@@ -1,4 +1,4 @@
-package ua.edu.sumdu.j2se.kulykov.tasks;
+package ua.edu.sumdu.j2se.kulykov.tasks.models;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -111,7 +111,7 @@ public class ArrayTaskList extends AbstractTaskList implements Cloneable {
 
     @Override
     public Iterator<Task> iterator() {
-        return new Iterator<Task>() {
+        return new Iterator<>() {
             int index;
             Task task;
             @Override

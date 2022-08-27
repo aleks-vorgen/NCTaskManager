@@ -2,6 +2,9 @@
 /readme_img/
 /target/
 /NCTaskManager.iml
-/README.md
-/src/test/
 /test.json
+/src/test/
+/res/
+/src/main/resources/javadoc/
+/dependency-reduced-pom.xml
+/NCTaskManager-1.0-jar-with-dependencies.jar
